@@ -18,7 +18,7 @@ def fetch_question():
     """Fetch a question about Filipino culture from an API."""
     # For demonstration purposes, we're using a mock API endpoint.
     # Replace with an actual API that provides Filipino questions/topics.
-    response = requests.get('http://version1.api.memegenerator.net/get_question')
+    response = requests.get('F1WG-IIg-i-3')
     
     if response.status_code == 200:
         question = response.json().get('question')
