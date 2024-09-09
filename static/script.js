@@ -1,3 +1,55 @@
+// Check if SpeechRecognition is supported
+if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+    alert('Speech Recognition is not supported by your browser. Please use Google Chrome or another compatible browser.');
+    throw new Error('Speech Recognition not supported.');
+}
+
+// Initialize Speech Recognition
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.lang = 'tl-PH';
+recognition.interimResults = false;
+recognition.maxAlternatives = 1;
+
+// Check if microphone is available
+navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(() => {
+        // Microphone is available, enable the start button
+        startButton.disabled = false;
+    })
+    .catch((error) => {
+        // Microphone is not available, show an error message
+        alert('Microphone is not available. Please make sure your microphone is connected and enabled.');
+        console.error(error);
+    });
+if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
+    alert('Speech Recognition is not supported by your browser. Please use Google Chrome or another compatible browser.');
+    throw new Error('Speech Recognition not supported.');
+}
+// Initialize Speech Recognition
+recognition.lang = 'tl-PH';
+recognition.interimResults = false;
+recognition.maxAlternatives = 1;
+
+// Handle speech recognition errors
+recognition.onerror = (event) => {
+    clearInterval(timer); // Stop the timer    recognition.onerror = (event) => {
+        clearInterval(timer); // Stop the timer
+        if (event.error === 'network') {
+            aiFeedback.innerText = 'Network error occurred. Please check your internet connection.';
+            addMessageToChatBox(aiFeedback.parentNode, 'Network error occurred. Please check your internet connection.', 'system');
+        } else {
+            aiFeedback.innerText = `Error occurred: ${event.error}`;
+            addMessageToChatBox(aiFeedback.parentNode, `Error occurred: ${event.error}`, 'system');
+        }
+        speakAIText(aiFeedback.innerText);
+        micIcon.style.filter = 'grayscale(100%'; // Turn off mic indicator
+    };
+    aiFeedback.innerText = `Error occurred: ${event.error}`;
+    addMessageToChatBox(aiFeedback.parentNode, `Error occurred: ${event.error}`, 'system');
+    speakAIText(aiFeedback.innerText);
+    micIcon.style.filter = 'grayscale(100%)'; // Turn off mic indicator
+;
+
 // Elements
 const aiText = document.getElementById('ai-text');
 const userText = document.getElementById('user-text');
@@ -6,6 +58,7 @@ const timerElement = document.getElementById('timer');
 const startButton = document.getElementById('start-speech');
 const chatBox = document.querySelector('.chat-box');
 const micIcon = document.getElementById('mic-icon');
+
 
 // Predefined questions and answers in Filipino
 const questions = [
@@ -26,7 +79,6 @@ const instructionText = "Pindutin ang Start button upang simulan ang pagsasanay.
 const readyPrompt = "Handa ka na bang magsimula? Sabihin 'oo' upang magpatuloy.";
 
 // Speech Recognition
-const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 recognition.lang = 'tl-PH';
 recognition.interimResults = false;
 recognition.maxAlternatives = 1;
@@ -59,7 +111,9 @@ function startTimer() {
         timerElement.innerText = timeLeft;
         timeLeft--;
     }, 1000);
-    recognition.start(); // Start speech recognition
+    if (recognition && recognition.status !== 'started' && recognition.status !== 'starting') {
+        recognition.start(); // Start speech recognition
+    }
 }
 
 // Get a random question from predefined list
@@ -143,6 +197,7 @@ startButton.addEventListener('click', function () {
         displayAndSpeakQuestion(); // Start asking questions
         console.log('isStarted', isStarted);
     }
+    console.log('Button clicked.');
 });
 
 // Clear chat box and reset button on page load
