@@ -31,15 +31,6 @@ recognition.lang = 'tl-PH';
 recognition.interimResults = false;
 recognition.maxAlternatives = 1;
 
-// Display instructions and prompt on page load
-window.addEventListener('load', () => {
-    addMessageToChatBox(aiText, instructionText);
-    speakAIText(instructionText);
-    
-    // Start recognition to listen for "oo" response
-    recognition.start();
-});
-
 // Function to start timer
 function startTimer() {
     timeLeft = 10;
@@ -75,6 +66,10 @@ function displayAndSpeakQuestion() {
 function speakAIText(text) {
     const speech = new SpeechSynthesisUtterance(text);
     speech.lang = 'tl-PH'; // Tagalog language
+    speech.onend = () => {
+        startTimer(); // Start timer after speaking
+        recognition.start(); // Start recognition after question is spoken
+    };
     window.speechSynthesis.speak(speech);
 }
 
@@ -96,10 +91,6 @@ recognition.onresult = (event) => {
 };
 
 // Handle speech recognition result for the main process
-recognition.onspeechend = () => {
-    recognition.stop(); // Stop recognition to avoid multiple triggers
-};
-
 recognition.onresult = (event) => {
     clearInterval(timer); // Stop the timer
     const transcript = event.results[0][0].transcript;
@@ -136,3 +127,10 @@ function addMessageToChatBox(messageElement, text) {
     chatBox.appendChild(messageClone);
     chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
 }
+
+// Handle the "Start Speaking" button click
+startSpeechButton.addEventListener('click', () => {
+    addMessageToChatBox(aiText, readyPrompt);
+    speakAIText(readyPrompt);
+    recognition.start(); // Start listening for the "oo" response
+});
