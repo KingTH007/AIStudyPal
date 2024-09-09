@@ -41,6 +41,7 @@ function displayInstructions() {
     speakAIText(instructionText);
     addMessageToChatBox(aiText, readyPrompt, 'system');
     speakAIText(readyPrompt);
+    console.log('displayInstructions', isStarted);
 }
 
 // Start timer and speech recognition
@@ -135,10 +136,12 @@ startButton.addEventListener('click', function () {
         recognition.start(); // Start listening for readiness
         micIcon.style.filter = 'none'; // Show mic is active
         isStarted = true;
+        console.log('isStarted', isStarted);
     } else {
         recognition.stop(); // Stop listening for readiness
         startButton.style.display = 'none'; // Hide the button
         displayAndSpeakQuestion(); // Start asking questions
+        console.log('isStarted', isStarted);
     }
 });
 
