@@ -17,7 +17,7 @@ aiMessageBubble.style.display = 'block';
 // Convert AI question text to speech
 function speakAIQuestion(text) {
     const speech = new SpeechSynthesisUtterance(text);
-    speech.lang = 'en-US';
+    speech.lang = 'tl-PH';
     window.speechSynthesis.speak(speech);
 }
 speakAIQuestion(aiQuestionText);
