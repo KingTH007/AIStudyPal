@@ -4,7 +4,14 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+body {
     background-color: black;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
 }
 
 li, a, button {
@@ -15,12 +22,15 @@ li, a, button {
     text-decoration: none;
 }
 
+
 /* Navigator */
 .Navigator {
     display: flex;
-    justify-content: space-between; /* Keeps buttons on the right */
+    justify-content: space-between;
     align-items: center;
     padding: 30px 3%;
+    width: 100%;
+    background-color: black; /* Keep background black for the nav */
 }
 
 .nav_line {
@@ -62,28 +72,102 @@ li, a, button {
 /* END */
 
 /*Voice recognation */
-h1 {
-    font-family: 'Montserrat', sans-serif;
-    color: white;
-    text-decoration: none;
+.chat-container {
+    width: 100%;
+    max-width: 800px;  /* Max width for mobile-first design */
+    background-color: #808080;  /* Grey background for container */
+    border-radius: 20px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    height: 80vh; /* Takes up most of the viewport */
+    overflow: hidden;
+    justify-content: space-between; /* Ensure input stays at bottom */
+    padding: 15px;
+    padding: 20px;
+    border-radius: 15px;
+    margin: auto; /* Center the container */
+    margin-top: 50px; /* Add some space from the top */
+    border: none;
+
 }
 
-#start-record-btn, #get-question-btn {
+/* Chatbox with overflow */
+.chat-box {
+    flex: 1;  /* Takes the available height */
+    overflow-y: auto;  /* Allows scrolling for the chat */
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;  /* Spacing between messages */
+}
+
+/* AI and User message bubbles */
+.message {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    margin-bottom: 10px;
+    display: none; /* Bubbles will be hidden by default */
+}
+
+/* AI message (align left, grey bubble) */
+.ai-message {
+    background-color: #f1f0f0;  /* Light grey */
+    align-self: flex-start;
+    color: #333;
+    display: block;
+}
+
+/* User message (align right, blue bubble) */
+.user-message {
+    background-color: #0084ff;  /* Messenger blue */
+    align-self: flex-end;
+    color: white;
+    display: block;
+}
+
+/* Combined Input Button and Mic Icon */
+.user-input {
+    padding: 15px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+button {
     padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #4CAF50;
+    background-color: #5cb85c;
     color: white;
     border: none;
-    border-radius: 5px;
-    margin: 5px;
+    cursor: pointer;
+    border-radius: 20px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-#start-record-btn:hover, #get-question-btn {
-    background-color: #45a049;
+button img {
+    width: 20px;
+    height: 20px;
 }
 
-#result, #question {
-    font-size: 18px;
-    margin-top: 20px;
+button:hover {
+    background-color: #4cae4c;
+}
+
+/* Microphone indicator */
+.mic-indicator {
+    margin-top: 10px;
+    text-align: center;
+}
+
+#mic-icon {
+    width: 25px;
+    height: 25px;
 }

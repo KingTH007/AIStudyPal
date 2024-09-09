@@ -1,66 +1,61 @@
-const startRecordButton = document.getElementById('start-record-btn');
-const getQuestionButton = document.getElementById('get-question-btn');
-const resultElement = document.getElementById('result');
-const questionElement = document.getElementById('question');
-const audioElement = document.getElementById('audio');
+const aiQuestion = document.getElementById('ai-question');
+const userResponse = document.getElementById('user-response');
+const aiFeedback = document.getElementById('ai-feedback');
 
-// Check for browser support
-if ('webkitSpeechRecognition' in window) {
-    const recognition = new webkitSpeechRecognition();
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.lang = 'en-US';
+// Bubbles for AI and user messages
+const aiMessageBubble = document.getElementById('ai-message');
+const userMessageBubble = document.getElementById('user-message');
+const aiFeedbackBubble = document.getElementById('ai-feedback-message');
 
-    recognition.onstart = function() {
-        console.log('Voice recognition started.');
-    };
+// AI Question (Text-to-Speech)
+const aiQuestionText = "What is the capital of the Philippines?";
+aiQuestion.innerText = aiQuestionText;
 
-    recognition.onresult = function(event) {
-        const transcript = event.results[0][0].transcript;
-        resultElement.innerText = `You said: ${transcript}`;
-        sendVoiceData(transcript);
-    };
+// Show the AI question bubble
+aiMessageBubble.style.display = 'block';
 
-    recognition.onerror = function(event) {
-        console.error('Error occurred in recognition: ', event.error);
-    };
-
-    recognition.onend = function() {
-        console.log('Voice recognition ended.');
-    };
-
-    startRecordButton.addEventListener('click', function() {
-        recognition.start();
-    });
-
-} else {
-    alert('Your browser does not support Web Speech API. Please use Google Chrome.');
+// Convert AI question text to speech
+function speakAIQuestion(text) {
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = 'en-US';
+    window.speechSynthesis.speak(speech);
 }
+speakAIQuestion(aiQuestionText);
 
-getQuestionButton.addEventListener('click', function() {
-    fetch('/get_question')
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            questionElement.innerText = `Question: ${data.question}`;
-        })
-        .catch(error => console.error('Error:', error));
+// Speech-to-Text (User Response)
+const startSpeechButton = document.getElementById('start-speech');
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.lang = 'en-US';
+recognition.interimResults = false;
+recognition.maxAlternatives = 1;
+
+// Start speech recognition when button is clicked
+startSpeechButton.addEventListener('click', () => {
+    recognition.start();
+    micIcon.style.filter = 'none'; // Show mic is active
 });
 
-function sendVoiceData(text) {
-    fetch('/process_voice', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ text: text })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        resultElement.innerText = data.response;
-        audioElement.src = data.audio_file;
-        audioElement.play();
-    })
-    .catch(error => console.error('Error:', error));
-}
+// Handle speech recognition result
+recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    userResponse.innerText = `You said: ${transcript}`;
+
+    // Show the user message bubble
+    userMessageBubble.style.display = 'block';
+
+    // Example logic for response validation
+    if (transcript.toLowerCase() === "manila") {
+        aiFeedback.innerText = "Correct! The capital of the Philippines is Manila.";
+    } else {
+        aiFeedback.innerText = "Incorrect. The capital is Manila.";
+    }
+
+    // Show the feedback bubble
+    aiFeedbackBubble.style.display = 'block';
+    micIcon.style.filter = 'grayscale(100%)'; // Turn off mic indicator
+};
+
+// Handle speech recognition errors
+recognition.onerror = (event) => {
+    aiFeedback.innerText = `Error occurred: ${event.error}`;
+};
