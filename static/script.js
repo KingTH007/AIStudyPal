@@ -1,3 +1,12 @@
+// Elements
+const aiText = document.getElementById('ai-text');
+const userText = document.getElementById('user-text');
+const aiFeedback = document.getElementById('ai-feedback');
+const timerElement = document.getElementById('timer');
+const startButton = document.getElementById('start-speech');
+const chatBox = document.querySelector('.chat-box');
+const micIcon = document.getElementById('mic-icon');
+
 // Check if SpeechRecognition is supported
 if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
     alert('Speech Recognition is not supported by your browser. Please use Google Chrome or another compatible browser.');
@@ -21,44 +30,20 @@ navigator.mediaDevices.getUserMedia({ audio: true })
         alert('Microphone is not available. Please make sure your microphone is connected and enabled.');
         console.error(error);
     });
-if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-    alert('Speech Recognition is not supported by your browser. Please use Google Chrome or another compatible browser.');
-    throw new Error('Speech Recognition not supported.');
-}
-// Initialize Speech Recognition
-recognition.lang = 'tl-PH';
-recognition.interimResults = false;
-recognition.maxAlternatives = 1;
 
 // Handle speech recognition errors
 recognition.onerror = (event) => {
-    clearInterval(timer); // Stop the timer    recognition.onerror = (event) => {
-        clearInterval(timer); // Stop the timer
-        if (event.error === 'network') {
-            aiFeedback.innerText = 'Network error occurred. Please check your internet connection.';
-            addMessageToChatBox(aiFeedback.parentNode, 'Network error occurred. Please check your internet connection.', 'system');
-        } else {
-            aiFeedback.innerText = `Error occurred: ${event.error}`;
-            addMessageToChatBox(aiFeedback.parentNode, `Error occurred: ${event.error}`, 'system');
-        }
-        speakAIText(aiFeedback.innerText);
-        micIcon.style.filter = 'grayscale(100%'; // Turn off mic indicator
-    };
-    aiFeedback.innerText = `Error occurred: ${event.error}`;
-    addMessageToChatBox(aiFeedback.parentNode, `Error occurred: ${event.error}`, 'system');
+    clearInterval(timer); // Stop the timer
+    if (event.error === 'network') {
+        aiFeedback.innerText = 'Network error occurred. Please check your internet connection.';
+        addMessageToChatBox(aiFeedback.parentNode, 'Network error occurred. Please check your internet connection.', 'system');
+    } else {
+        aiFeedback.innerText = `Error occurred: ${event.error}`;
+        addMessageToChatBox(aiFeedback.parentNode, `Error occurred: ${event.error}`, 'system');
+    }
     speakAIText(aiFeedback.innerText);
     micIcon.style.filter = 'grayscale(100%)'; // Turn off mic indicator
-;
-
-// Elements
-const aiText = document.getElementById('ai-text');
-const userText = document.getElementById('user-text');
-const aiFeedback = document.getElementById('ai-feedback');
-const timerElement = document.getElementById('timer');
-const startButton = document.getElementById('start-speech');
-const chatBox = document.querySelector('.chat-box');
-const micIcon = document.getElementById('mic-icon');
-
+};
 
 // Predefined questions and answers in Filipino
 const questions = [
@@ -78,20 +63,15 @@ let currentQuestion = {};
 const instructionText = "Pindutin ang Start button upang simulan ang pagsasanay. Pagkatapos, magsasalita ang AI at maaari mong sagutin gamit ang iyong boses.";
 const readyPrompt = "Handa ka na bang magsimula? Sabihin 'oo' upang magpatuloy.";
 
-// Speech Recognition
-recognition.lang = 'tl-PH';
-recognition.interimResults = false;
-recognition.maxAlternatives = 1;
-
 // Track button state
 let isStarted = false;
 
 // Display instructions and prompt
 function displayInstructions() {
     chatBox.innerHTML = ''; // Clear chat box before adding new messages
-    addMessageToChatBox(aiText, instructionText, 'system');
+    addMessageToChatBox(aiText.parentNode, instructionText, 'system');
     speakAIText(instructionText);
-    addMessageToChatBox(aiText, readyPrompt, 'system');
+    addMessageToChatBox(aiText.parentNode, readyPrompt, 'system');
     speakAIText(readyPrompt);
     console.log('displayInstructions', isStarted);
 }
@@ -104,7 +84,7 @@ function startTimer() {
         if (timeLeft <= 0) {
             clearInterval(timer);
             aiFeedback.innerText = "Wala kang sagot. Subukan ulit.";
-            addMessageToChatBox(aiFeedback, aiFeedback.innerText, 'system');
+            addMessageToChatBox(aiFeedback.parentNode, aiFeedback.innerText, 'system');
             speakAIText(aiFeedback.innerText);
             return;
         }
@@ -126,7 +106,7 @@ function getRandomQuestion() {
 function displayAndSpeakQuestion() {
     currentQuestion = getRandomQuestion();
     aiText.innerText = currentQuestion.question;
-    addMessageToChatBox(aiText, currentQuestion.question, 'system');
+    addMessageToChatBox(aiText.parentNode, currentQuestion.question, 'system');
     speakAIText(currentQuestion.question);
     startTimer(); // Start timer when question is displayed
 }
@@ -143,7 +123,7 @@ recognition.onresult = (event) => {
     clearInterval(timer); // Stop the timer
     const transcript = event.results[0][0].transcript;
     userText.innerText = `Sinabi mo: ${transcript}`;
-    addMessageToChatBox(userText, `Sinabi mo: ${transcript}`, 'user');
+    addMessageToChatBox(userText.parentNode, `Sinabi mo: ${transcript}`, 'user');
     speakAIText(userText.innerText);
 
     // Check the user's answer and provide feedback
@@ -151,7 +131,7 @@ recognition.onresult = (event) => {
     const isCorrect = transcript.toLowerCase().includes(correctAnswer.toLowerCase());
 
     aiFeedback.innerText = isCorrect ? "Tama ang sagot!" : "Mali ang sagot. Ang tamang sagot ay: " + correctAnswer;
-    addMessageToChatBox(aiFeedback, aiFeedback.innerText, 'system');
+    addMessageToChatBox(aiFeedback.parentNode, aiFeedback.innerText, 'system');
     speakAIText(aiFeedback.innerText);
 
     micIcon.style.filter = 'grayscale(100%)'; // Turn off mic indicator
@@ -160,22 +140,14 @@ recognition.onresult = (event) => {
     displayAndSpeakQuestion();
 };
 
-// Handle speech recognition errors
-recognition.onerror = (event) => {
-    clearInterval(timer); // Stop the timer
-    aiFeedback.innerText = `Error occurred: ${event.error}`;
-    addMessageToChatBox(aiFeedback, `Error occurred: ${event.error}`, 'system');
-    speakAIText(aiFeedback.innerText);
-};
-
 // Add messages to chatbox
 function addMessageToChatBox(messageElement, text, type) {
     const messageClone = messageElement.cloneNode(true);
     const paragraph = messageClone.querySelector('p');
-    if (paragraph){
-    messageClone.querySelector('p').innerText = text;
-    }else {
-console.log('no paragraph found');
+    if (paragraph) {
+        paragraph.innerText = text;
+    } else {
+        console.log('no paragraph found');
     }
     messageClone.classList.add(type === 'system' ? 'ai-message' : 'user-message');
     chatBox.appendChild(messageClone);
