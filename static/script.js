@@ -11,11 +11,11 @@ const micIcon = document.getElementById('mic-icon');
 
 // Predefined questions and answers in Filipino
 const questions = [
-    { question: "Ano ang pangunahing layunin ng Balagtasan?", answer: "Upang ipakita ang husay sa pangangatwiran sa tula." },
-    { question: "Sino ang tinaguriang 'Ama ng Wika' sa Pilipinas?", answer: "Manuel L. Quezon." },
-    { question: "Ano ang pagkakaiba ng tula at kwento?", answer: "Ang tula ay may sukat at tugma; ang kwento ay walang tiyak na sukat at tugma." },
-    { question: "Ano ang kahulugan ng 'Buwan ng Wika'?", answer: "Pagdiriwang ng paggamit ng wikang Filipino at lokal na wika." },
-    { question: "Paano nakakatulong ang pagsasalita ng Tagalog sa pag-unlad ng bansa?", answer: "Nagpapalaganap ng pagkakaisa at pag-unawa." }
+    { question: "Ano ang pangunahing layunin ng Balagtasan?", answer: "sa pamamagitan ng tula." },
+    { question: "Sino ang tinaguriang 'Ama ng Wika' sa Pilipinas?", answer: "Si Manuel L. Quezon" },
+    { question: "Ano ang pagkakaiba ng tula at kwento?", answer: "Ang tula ay may sukat at tugma, ang kwento ay isang naratibong." },
+    { question: "Ano ang kahulugan ng 'Buwan ng Wika'?", answer: "paggamit ng wikang Filipino" },
+    { question: "Paano nakakatulong ang pagsasalita ng Tagalog sa pag-unlad ng bansa?", answer: "pagkakaisa at pag-unawa" }
 ];
 
 // Timer
@@ -23,6 +23,42 @@ let timer;
 let timeLeft = 10;
 let currentQuestion = {};
 
+// Instructions and prompt
+const instructionText = "Pindutin ang Start Speaking button upang simulan ang pagsasanay. Pagkatapos, magsasalita ang AI at maaari mong sagutin gamit ang iyong boses.";
+const readyPrompt = "Handa ka na bang magsimula? Sabihin 'oo' upang magpatuloy.";
+
+// Speech Recognition
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.lang = 'tl-PH';
+recognition.interimResults = false;
+recognition.maxAlternatives = 1;
+
+// Display instructions and prompt on page load
+window.addEventListener('load', () => {
+    aiText.innerText = instructionText;
+    aiFeedbackBubble.style.display = 'block';
+
+    // Automatically start recognition to listen for "oo" response
+    recognition.start();
+});
+
+// Handle speech recognition result
+recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript.toLowerCase().trim();
+
+    if (transcript === 'oo') {
+        // If the user confirms they are ready, start the main process
+        aiFeedbackBubble.style.display = 'none'; // Hide instructions
+        displayAndSpeakQuestion();
+        micIcon.style.filter = 'none'; // Show mic is active
+        recognition.start(); // Restart recognition for the main process
+    } else if (transcript !== '') {
+        aiFeedback.innerText = `Hindi kita naintindihan. Sabihin 'oo' kung handa ka nang magsimula.`;
+        aiFeedbackBubble.style.display = 'block';
+    }
+};
+
+// Function to start timer
 function startTimer() {
     timeLeft = 10;
     timerElement.innerText = timeLeft;
@@ -61,20 +97,7 @@ function speakAIQuestion(text) {
     window.speechSynthesis.speak(speech);
 }
 
-// Speech-to-Text
-const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-recognition.lang = 'tl-PH';
-recognition.interimResults = false;
-recognition.maxAlternatives = 1;
-
-// Start speech recognition and display question automatically
-window.addEventListener('load', () => {
-    displayAndSpeakQuestion();
-    recognition.start();
-    micIcon.style.filter = 'none'; // Show mic is active
-});
-
-// Handle speech recognition result
+// Handle speech recognition result for the main process
 recognition.onresult = (event) => {
     clearInterval(timer); // Stop the timer
     const transcript = event.results[0][0].transcript;
