@@ -4,9 +4,7 @@ const userText = document.getElementById('user-text');
 const aiFeedback = document.getElementById('ai-feedback');
 const timerElement = document.getElementById('timer');
 const startSpeechButton = document.getElementById('start-speech');
-const aiMessageBubble = document.getElementById('ai-message');
-const userMessageBubble = document.getElementById('user-message');
-const aiFeedbackBubble = document.getElementById('ai-feedback-message');
+const chatBox = document.querySelector('.chat-box');
 const micIcon = document.getElementById('mic-icon');
 
 // Predefined questions and answers in Filipino
@@ -18,10 +16,10 @@ const questions = [
     { question: "Paano nakakatulong ang pagsasalita ng Tagalog sa pag-unlad ng bansa?", answer: "pagkakaisa at pag-unawa" }
 ];
 
+// Timer
 let timer;
 let timeLeft = 10;
 let currentQuestion = {};
-let usedQuestions = [];
 
 // Instructions and prompt
 const instructionText = "Pindutin ang Start Speaking button upang simulan ang pagsasanay. Pagkatapos, magsasalita ang AI at maaari mong sagutin gamit ang iyong boses.";
@@ -35,28 +33,12 @@ recognition.maxAlternatives = 1;
 
 // Display instructions and prompt on page load
 window.addEventListener('load', () => {
-    aiText.innerText = instructionText;
-    aiFeedbackBubble.style.display = 'block';
-
+    addMessageToChatBox(aiText, instructionText);
+    speakAIText(instructionText);
+    
     // Start recognition to listen for "oo" response
     recognition.start();
 });
-
-// Handle speech recognition result for the readiness prompt
-recognition.onresult = (event) => {
-    const transcript = event.results[0][0].transcript.toLowerCase().trim();
-
-    if (transcript === 'oo') {
-        // If the user confirms they are ready, start the main process
-        aiFeedbackBubble.style.display = 'none'; // Hide instructions
-        startSpeechButton.style.display = 'none'; // Hide the start button
-        recognition.stop(); // Stop listening for "oo"
-        displayAndSpeakQuestion(); // Start asking questions
-    } else if (transcript !== '') {
-        aiFeedback.innerText = `Hindi kita naintindihan. Sabihin 'oo' kung handa ka nang magsimula.`;
-        aiFeedbackBubble.style.display = 'block';
-    }
-};
 
 // Function to start timer
 function startTimer() {
@@ -66,7 +48,8 @@ function startTimer() {
         if (timeLeft <= 0) {
             clearInterval(timer);
             aiFeedback.innerText = "Wala kang sagot. Subukan ulit.";
-            aiFeedbackBubble.style.display = 'block';
+            addMessageToChatBox(aiFeedback, aiFeedback.innerText);
+            speakAIText(aiFeedback.innerText);
             return;
         }
         timerElement.innerText = timeLeft;
@@ -76,57 +59,65 @@ function startTimer() {
 
 // Get a random question from predefined list
 function getRandomQuestion() {
-    const availableQuestions = questions.filter(q => !usedQuestions.includes(q));
-    if (availableQuestions.length === 0) {
-        aiText.innerText = "Natapos na ang lahat ng tanong.";
-        return null;
-    }
-    const index = Math.floor(Math.random() * availableQuestions.length);
-    return availableQuestions[index];
+    const index = Math.floor(Math.random() * questions.length);
+    return questions[index];
 }
 
 // Display question and speak it
 function displayAndSpeakQuestion() {
     currentQuestion = getRandomQuestion();
-    if (currentQuestion === null) return; // No more questions
     aiText.innerText = currentQuestion.question;
-    speakAIQuestion(currentQuestion.question);
+    addMessageToChatBox(aiText, currentQuestion.question);
+    speakAIText(currentQuestion.question);
 }
 
-// Convert AI question text to speech
-function speakAIQuestion(text) {
+// Convert text to speech
+function speakAIText(text) {
     const speech = new SpeechSynthesisUtterance(text);
     speech.lang = 'tl-PH'; // Tagalog language
-    speech.onend = () => {
-        startTimer(); // Start timer after speaking
-    };
     window.speechSynthesis.speak(speech);
 }
 
+// Handle speech recognition result for the readiness prompt
+recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript.toLowerCase().trim();
+
+    if (transcript === 'oo') {
+        // If the user confirms they are ready, start the main process
+        aiText.innerText = '';
+        startSpeechButton.style.display = 'none'; // Hide the start button
+        recognition.stop(); // Stop listening for readiness
+        displayAndSpeakQuestion(); // Start asking questions
+    } else if (transcript !== '') {
+        aiFeedback.innerText = `Hindi kita naintindihan. Sabihin 'oo' kung handa ka nang magsimula.`;
+        addMessageToChatBox(aiFeedback, aiFeedback.innerText);
+        speakAIText(aiFeedback.innerText);
+    }
+};
+
 // Handle speech recognition result for the main process
+recognition.onspeechend = () => {
+    recognition.stop(); // Stop recognition to avoid multiple triggers
+};
+
 recognition.onresult = (event) => {
     clearInterval(timer); // Stop the timer
     const transcript = event.results[0][0].transcript;
     userText.innerText = `Sinabi mo: ${transcript}`;
-
-    // Show the user message bubble
-    userMessageBubble.style.display = 'block';
+    addMessageToChatBox(userText, `Sinabi mo: ${transcript}`);
+    speakAIText(userText.innerText);
 
     // Check the user's answer and provide feedback
     const correctAnswer = currentQuestion.answer;
     const isCorrect = transcript.toLowerCase().includes(correctAnswer.toLowerCase());
 
     aiFeedback.innerText = isCorrect ? "Tama ang sagot!" : "Mali ang sagot. Ang tamang sagot ay: " + correctAnswer;
-    aiFeedbackBubble.style.display = 'block';
+    addMessageToChatBox(aiFeedback, aiFeedback.innerText);
+    speakAIText(aiFeedback.innerText);
+
     micIcon.style.filter = 'grayscale(100%)'; // Turn off mic indicator
 
-    // Add new messages to chatbox
-    addMessageToChatBox(aiMessageBubble, currentQuestion.question);
-    addMessageToChatBox(userMessageBubble, `Sinabi mo: ${transcript}`);
-    addMessageToChatBox(aiFeedbackBubble, aiFeedback.innerText);
-
-    // Mark question as used and move to the next question
-    usedQuestions.push(currentQuestion);
+    // Automatically move to the next question
     displayAndSpeakQuestion();
 };
 
@@ -134,13 +125,14 @@ recognition.onresult = (event) => {
 recognition.onerror = (event) => {
     clearInterval(timer); // Stop the timer
     aiFeedback.innerText = `Error occurred: ${event.error}`;
-    aiFeedbackBubble.style.display = 'block';
-    addMessageToChatBox(aiMessageBubble, `Error occurred: ${event.error}`);
+    addMessageToChatBox(aiFeedback, `Error occurred: ${event.error}`);
+    speakAIText(aiFeedback.innerText);
 };
 
 // Function to add messages to chatbox
-function addMessageToChatBox(messageBubble, text) {
-    const messageClone = messageBubble.cloneNode(true);
+function addMessageToChatBox(messageElement, text) {
+    const messageClone = messageElement.cloneNode(true);
     messageClone.querySelector('p').innerText = text;
-    document.querySelector('.chat-box').appendChild(messageClone);
+    chatBox.appendChild(messageClone);
+    chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
 }
