@@ -16,7 +16,7 @@ def text_to_speech(text):
 
 def fetch_question():
     """Fetch a question (mock example)."""
-    question = "What is the capital of the Philippines?"
+    question = "Ano ang capital ng Pilipinas?"
     return question
 
 @app.route('/get_question', methods=['GET'])
