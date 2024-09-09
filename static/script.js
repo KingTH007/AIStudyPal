@@ -1,6 +1,7 @@
-const aiText = document.getElementById('ai-text');
-const userText = document.getElementById('user-text');
+const aiText = document.getElementById('ai-question');
+const userText = document.getElementById('user-response');
 const aiFeedback = document.getElementById('ai-feedback');
+const timerElement = document.getElementById('timer');
 
 // Bubbles for AI and user messages
 const aiMessageBubble = document.getElementById('ai-message');
@@ -10,7 +11,6 @@ const aiFeedbackBubble = document.getElementById('ai-feedback-message');
 // Timer
 let timer;
 let timeLeft = 10;
-const timerElement = document.getElementById('timer');
 
 function startTimer() {
     timeLeft = 10;
