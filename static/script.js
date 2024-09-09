@@ -8,7 +8,7 @@ const userMessageBubble = document.getElementById('user-message');
 const aiFeedbackBubble = document.getElementById('ai-feedback-message');
 
 // AI Question (Text-to-Speech)
-const aiQuestionText = "What is the capital of the Philippines?";
+const aiQuestionText = "Ano ang capital ng Pilipinas?";
 aiQuestion.innerText = aiQuestionText;
 
 // Show the AI question bubble
@@ -25,7 +25,7 @@ speakAIQuestion(aiQuestionText);
 // Speech-to-Text (User Response)
 const startSpeechButton = document.getElementById('start-speech');
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-recognition.lang = 'en-US';
+recognition.lang = 'tl-PH';
 recognition.interimResults = false;
 recognition.maxAlternatives = 1;
 
@@ -45,9 +45,9 @@ recognition.onresult = (event) => {
 
     // Example logic for response validation
     if (transcript.toLowerCase() === "manila") {
-        aiFeedback.innerText = "Correct! The capital of the Philippines is Manila.";
+        aiFeedback.innerText = "Tama! Ang capital ng Pilipinas ay Manila.";
     } else {
-        aiFeedback.innerText = "Incorrect. The capital is Manila.";
+        aiFeedback.innerText = "Mali. Ang capital ay Manila.";
     }
 
     // Show the feedback bubble
