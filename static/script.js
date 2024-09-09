@@ -116,7 +116,12 @@ recognition.onerror = (event) => {
 // Add messages to chatbox
 function addMessageToChatBox(messageElement, text, type) {
     const messageClone = messageElement.cloneNode(true);
+    const paragraph = messageClone.querySelector('p');
+    if (paragraph){
     messageClone.querySelector('p').innerText = text;
+    }else {
+console.log('no paragraph found');
+    }
     messageClone.classList.add(type === 'system' ? 'ai-message' : 'user-message');
     chatBox.appendChild(messageClone);
     chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
