@@ -34,16 +34,40 @@ navigator.mediaDevices.getUserMedia({ audio: true })
 // Handle speech recognition errors
 recognition.onerror = (event) => {
     clearInterval(timer); // Stop the timer
-    if (event.error === 'network') {
-        aiFeedback.innerText = 'Network error occurred. Please check your internet connection.';
-        addMessageToChatBox(aiFeedback.parentNode, 'Network error occurred. Please check your internet connection.', 'system');
-    } else {
-        aiFeedback.innerText = `Error occurred: ${event.error}`;
-        addMessageToChatBox(aiFeedback.parentNode, `Error occurred: ${event.error}`, 'system');
+
+    let errorMessage = 'An error occurred';
+
+    // Provide detailed error messages
+    switch (event.error) {
+        case 'network':
+            errorMessage = 'Network error occurred. Please check your internet connection.';
+            break;
+        case 'no-speech':
+            errorMessage = 'No speech detected. Please try speaking louder or closer to the microphone.';
+            break;
+        case 'audio-capture':
+            errorMessage = 'Audio capture error. Ensure your microphone is properly connected.';
+            break;
+        case 'not-allowed':
+            errorMessage = 'Permission to use the microphone is denied. Please grant microphone access.';
+            break;
+        case 'service-not-allowed':
+            errorMessage = 'Speech recognition service is not available. Please try again later.';
+            break;
+        default:
+            errorMessage = `Error occurred: ${event.error}`;
+            break;
     }
-    speakAIText(aiFeedback.innerText);
+
+    aiFeedback.innerText = errorMessage;
+    addMessageToChatBox(aiFeedback.parentNode, errorMessage, 'system');
+    speakAIText(errorMessage);
     micIcon.style.filter = 'grayscale(100%)'; // Turn off mic indicator
+
+    // Log error for debugging
+    console.log('Error:', event.error);
 };
+
 
 // Predefined questions and answers in Filipino
 const questions = [
