@@ -45,9 +45,9 @@ recognition.onresult = (event) => {
 
     // Example logic for response validation
     if (transcript.toLowerCase() === "manila") {
-        aiFeedback.innerText = "Tama! Ang capital ng Pilipinas ay Manila.";
+        aiFeedback.innerText = "Tama! The capital of the Philippines is Manila.";
     } else {
-        aiFeedback.innerText = "Mali. Ang capital ay Manila.";
+        aiFeedback.innerText = "Mali. The capital is Manila.";
     }
 
     // Show the feedback bubble
