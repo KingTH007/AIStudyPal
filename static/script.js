@@ -18,10 +18,10 @@ const questions = [
     { question: "Paano nakakatulong ang pagsasalita ng Tagalog sa pag-unlad ng bansa?", answer: "pagkakaisa at pag-unawa" }
 ];
 
-// Timer
 let timer;
 let timeLeft = 10;
 let currentQuestion = {};
+let usedQuestions = [];
 
 // Instructions and prompt
 const instructionText = "Pindutin ang Start Speaking button upang simulan ang pagsasanay. Pagkatapos, magsasalita ang AI at maaari mong sagutin gamit ang iyong boses.";
@@ -50,6 +50,7 @@ recognition.onresult = (event) => {
         // If the user confirms they are ready, start the main process
         aiFeedbackBubble.style.display = 'none'; // Hide instructions
         startSpeechButton.style.display = 'none'; // Hide the start button
+        recognition.stop(); // Stop listening for "oo"
         displayAndSpeakQuestion(); // Start asking questions
     } else if (transcript !== '') {
         aiFeedback.innerText = `Hindi kita naintindihan. Sabihin 'oo' kung handa ka nang magsimula.`;
@@ -75,13 +76,19 @@ function startTimer() {
 
 // Get a random question from predefined list
 function getRandomQuestion() {
-    const index = Math.floor(Math.random() * questions.length);
-    return questions[index];
+    const availableQuestions = questions.filter(q => !usedQuestions.includes(q));
+    if (availableQuestions.length === 0) {
+        aiText.innerText = "Natapos na ang lahat ng tanong.";
+        return null;
+    }
+    const index = Math.floor(Math.random() * availableQuestions.length);
+    return availableQuestions[index];
 }
 
 // Display question and speak it
 function displayAndSpeakQuestion() {
     currentQuestion = getRandomQuestion();
+    if (currentQuestion === null) return; // No more questions
     aiText.innerText = currentQuestion.question;
     speakAIQuestion(currentQuestion.question);
 }
@@ -118,7 +125,8 @@ recognition.onresult = (event) => {
     addMessageToChatBox(userMessageBubble, `Sinabi mo: ${transcript}`);
     addMessageToChatBox(aiFeedbackBubble, aiFeedback.innerText);
 
-    // Automatically move to the next question
+    // Mark question as used and move to the next question
+    usedQuestions.push(currentQuestion);
     displayAndSpeakQuestion();
 };
 
