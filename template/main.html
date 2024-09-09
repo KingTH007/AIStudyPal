@@ -21,27 +21,29 @@
     </nav>
 
     <!--Chatbox-->
+    <!--Chatbox-->
     <div class="chat-container">
         <!-- Chat Area (Scrollable) -->
         <div class="chat-box">
-            <!-- AI Question and Response Bubbles (Appear dynamically) -->
-            <div class="message ai-message" id="ai-message" style="display: none;">
-                <p id="ai-question"></p>
+            <!-- AI Question and Response Bubbles -->
+            <div class="message ai-message" id="ai-message">
+                <p id="ai-text"></p>
             </div>
     
-            <!-- User Response Bubble (Appear dynamically) -->
-            <div class="message user-message" id="user-message" style="display: none;">
-                <p id="user-response"></p>
+            <!-- User Response Bubble -->
+            <div class="message user-message" id="user-message">
+                <p id="user-text"></p>
             </div>
     
-            <!-- AI Feedback Bubble (Appear dynamically) -->
-            <div class="message ai-message" id="ai-feedback-message" style="display: none;">
+            <!-- AI Feedback Bubble -->
+            <div class="message ai-message" id="ai-feedback-message">
                 <p id="ai-feedback"></p>
             </div>
         </div>
     
-        <!-- Combined Input Button and Mic Icon -->
+        <!-- Timer and Input Button -->
         <div class="user-input">
+            <div id="timer">10</div>
             <button id="start-speech">
                 <img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start Speaking
             </button>

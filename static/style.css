@@ -171,3 +171,11 @@ button:hover {
     width: 25px;
     height: 25px;
 }
+
+#timer {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+    color: white;
+    text-align: center;
+    margin-top: 10px;
+}
