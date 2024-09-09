@@ -1,0 +1,165 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: black;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+}
+
+li, a, button {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: white;
+    text-decoration: none;
+}
+
+
+/* Navigator */
+.Navigator {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 3%;
+    width: 100%;
+    background-color: black; /* Keep background black for the nav */
+}
+
+.nav_line {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex: 1;
+}
+
+.nav_line li {
+    padding: 0 35px;
+}
+
+.nav_line li a {
+    transition: all 0.3s ease 0s;
+}
+
+.nav_line li a:hover {
+    color: #8aee0b;
+}
+
+.buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.su button, .si button {
+    padding: 6px 15px;
+    cursor: pointer;
+    background-color: #61d813;
+    border: hidden;
+    border-radius: 500px;
+    transition: all 0.3s ease 0s;
+}
+
+.su button:hover, .si button:hover{
+    background-color: #5dbd1d;
+}
+/* END */
+
+/*Voice recognation */
+.chat-container {
+    width: 100%;
+    max-width: 800px;  /* Max width for mobile-first design */
+    background-color: #808080;  /* Grey background for container */
+    border-radius: 20px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    height: 80vh; /* Takes up most of the viewport */
+    overflow: hidden;
+    justify-content: space-between; /* Ensure input stays at bottom */
+    padding: 15px;
+    margin: auto; /* Center the container */
+    margin-top: 50px; /* Add some space from the top */
+    border: none;
+}
+
+/* Chatbox with overflow */
+.chat-box {
+    flex: 1;  /* Takes the available height */
+    overflow-y: auto;  /* Allows scrolling for the chat */
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;  /* Spacing between messages */
+}
+
+/* AI and User message bubbles */
+.message {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    margin-bottom: 10px;
+}
+
+/* AI message (align left, grey bubble) */
+.ai-message {
+    background-color: #f1f0f0;  /* Light grey */
+    align-self: flex-start;
+    color: #333;
+}
+
+/* User message (align right, blue bubble) */
+.user-message {
+    background-color: #0084ff;  /* Messenger blue */
+    align-self: flex-end;
+    color: white;
+}
+
+/* Timer and Input Button */
+.user-input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Space between timer and button */
+    padding: 15px;
+    border-top: 1px solid #ddd;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 20px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+button img {
+    width: 20px;
+    height: 20px;
+}
+
+button:hover {
+    background-color: #4cae4c;
+}
+
+/* Timer Styling */
+.timer {
+    font-size: 16px;
+    color: #fff;
+    background-color: #333;
+    border-radius: 10px;
+    padding: 5px 10px;
+}
