@@ -11,11 +11,11 @@ const micIcon = document.getElementById('mic-icon');
 
 // Predefined questions and answers in Filipino
 const questions = [
-    { question: "Ano ang pangunahing layunin ng Balagtasan?", answer: "Ang pangunahing layunin ng Balagtasan ay upang ipakita ang husay sa pangangatwiran sa pamamagitan ng tula." },
-    { question: "Sino ang tinaguriang 'Ama ng Wika' sa Pilipinas?", answer: "Si Manuel L. Quezon ang tinaguriang 'Ama ng Wika' sa Pilipinas." },
-    { question: "Ano ang pagkakaiba ng tula at kwento?", answer: "Ang tula ay may sukat at tugma, samantalang ang kwento ay isang naratibong anyo na walang tiyak na sukat at tugma." },
-    { question: "Ano ang kahulugan ng 'Buwan ng Wika'?", answer: "Ang 'Buwan ng Wika' ay isang pagdiriwang na layuning itaguyod ang paggamit ng wikang Filipino at mga lokal na wika." },
-    { question: "Paano nakakatulong ang pagsasalita ng Tagalog sa pag-unlad ng bansa?", answer: "Ang pagsasalita ng Tagalog ay nakakatulong sa pag-unlad ng bansa sa pamamagitan ng pagpapalaganap ng pagkakaisa at pag-unawa sa pagitan ng mga mamamayan." }
+    { question: "Ano ang pangunahing layunin ng Balagtasan?", answer: "Upang ipakita ang husay sa pangangatwiran sa tula." },
+    { question: "Sino ang tinaguriang 'Ama ng Wika' sa Pilipinas?", answer: "Manuel L. Quezon." },
+    { question: "Ano ang pagkakaiba ng tula at kwento?", answer: "Ang tula ay may sukat at tugma; ang kwento ay walang tiyak na sukat at tugma." },
+    { question: "Ano ang kahulugan ng 'Buwan ng Wika'?", answer: "Pagdiriwang ng paggamit ng wikang Filipino at lokal na wika." },
+    { question: "Paano nakakatulong ang pagsasalita ng Tagalog sa pag-unlad ng bansa?", answer: "Nagpapalaganap ng pagkakaisa at pag-unawa." }
 ];
 
 // Timer
