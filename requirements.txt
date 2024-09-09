@@ -1,3 +1,2 @@
-flask
-pyttsx3
-pytest
+Flask==2.0.1
+pytest==8.3.2
