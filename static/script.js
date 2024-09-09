@@ -38,20 +38,19 @@ window.addEventListener('load', () => {
     aiText.innerText = instructionText;
     aiFeedbackBubble.style.display = 'block';
 
-    // Automatically start recognition to listen for "oo" response
+    // Start recognition to listen for "oo" response
     recognition.start();
 });
 
-// Handle speech recognition result
+// Handle speech recognition result for the readiness prompt
 recognition.onresult = (event) => {
     const transcript = event.results[0][0].transcript.toLowerCase().trim();
 
     if (transcript === 'oo') {
         // If the user confirms they are ready, start the main process
         aiFeedbackBubble.style.display = 'none'; // Hide instructions
-        displayAndSpeakQuestion();
-        micIcon.style.filter = 'none'; // Show mic is active
-        recognition.start(); // Restart recognition for the main process
+        startSpeechButton.style.display = 'none'; // Hide the start button
+        displayAndSpeakQuestion(); // Start asking questions
     } else if (transcript !== '') {
         aiFeedback.innerText = `Hindi kita naintindihan. Sabihin 'oo' kung handa ka nang magsimula.`;
         aiFeedbackBubble.style.display = 'block';
@@ -118,6 +117,9 @@ recognition.onresult = (event) => {
     addMessageToChatBox(aiMessageBubble, currentQuestion.question);
     addMessageToChatBox(userMessageBubble, `Sinabi mo: ${transcript}`);
     addMessageToChatBox(aiFeedbackBubble, aiFeedback.innerText);
+
+    // Automatically move to the next question
+    displayAndSpeakQuestion();
 };
 
 // Handle speech recognition errors
