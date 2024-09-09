@@ -20,13 +20,34 @@
         </div>
     </nav>
 
-    <!--AI Voice recorder-->
-    <h1>AI Tutor - Learn About Filipino Culture</h1>
-    <button id="start-record-btn">Start Recording</button>
-    <button id="get-question-btn">Get a Question</button>
-    <p id="question"></p>
-    <p id="result"></p>
-    <audio id="audio" controls></audio>
+    <!--Chatbox-->
+    <div class="chat-container">
+        <!-- Chat Area (Scrollable) -->
+        <div class="chat-box">
+            <!-- AI Question and Response Bubbles (Appear dynamically) -->
+            <div class="message ai-message" id="ai-message" style="display: none;">
+                <p id="ai-question"></p>
+            </div>
+    
+            <!-- User Response Bubble (Appear dynamically) -->
+            <div class="message user-message" id="user-message" style="display: none;">
+                <p id="user-response"></p>
+            </div>
+    
+            <!-- AI Feedback Bubble (Appear dynamically) -->
+            <div class="message ai-message" id="ai-feedback-message" style="display: none;">
+                <p id="ai-feedback"></p>
+            </div>
+        </div>
+    
+        <!-- Combined Input Button and Mic Icon -->
+        <div class="user-input">
+            <button id="start-speech">
+                <img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start Speaking
+            </button>
+        </div>
+    </div>
+    
 
     <!-- Link to JavaScript file -->
     <script src="../static/script.js"></script>

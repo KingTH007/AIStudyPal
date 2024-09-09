@@ -1,30 +1,23 @@
 from flask import Flask, request, jsonify
 import pyttsx3
-import requests
-import speech_recognition as sr
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', template_folder='templates')
 
 # Initialize Text-to-Speech engine
 engine = pyttsx3.init()
 
 def text_to_speech(text):
     """Convert text to speech and save it as an audio file."""
-    engine.save_to_file(text, 'response.mp3')
+    audio_file_path = 'response.mp3'
+    engine.save_to_file(text, audio_file_path)
     engine.runAndWait()
-    return 'response.mp3'
+    return audio_file_path
 
 def fetch_question():
-    """Fetch a question about Filipino culture from an API."""
-    # For demonstration purposes, we're using a mock API endpoint.
-    # Replace with an actual API that provides Filipino questions/topics.
-    response = requests.get('F1WG-IIg-i-3')
-    
-    if response.status_code == 200:
-        question = response.json().get('question')
-        return question
-    else:
-        return "Could not fetch question. Please try again later."
+    """Fetch a question (mock example)."""
+    question = "What is the capital of the Philippines?"
+    return question
 
 @app.route('/get_question', methods=['GET'])
 def get_question():
@@ -34,19 +27,23 @@ def get_question():
 
 @app.route('/process_voice', methods=['POST'])
 def process_voice():
-    # Get the text from the POST request
+    """Process user's voice input and respond."""
     data = request.get_json()
     user_text = data.get('text')
     
-    # Example response logic: simple echo response
-    response_text = f"I heard you say: {user_text}. Let's move to the next question."
-    
-    # Convert response text to speech
-    audio_file = text_to_speech(response_text)
-    
-    # Send back the response and the audio file URL
-    return jsonify({'response': response_text, 'audio_file': audio_file})
+    # Simple logic for feedback
+    if user_text.lower() == "manila":
+        response_text = "Correct! The capital of the Philippines is Manila."
+    else:
+        response_text = "Incorrect. The correct answer is Manila."
+
+    # Convert response text to speech (optional step if saving files)
+    text_to_speech(response_text)
+
+    # Send back the response text
+    return jsonify({'response': response_text})
 
 if __name__ == '__main__':
-    # Run the app
+    if os.path.exists('response.mp3'):
+        os.remove('response.mp3')
     app.run(debug=True)
