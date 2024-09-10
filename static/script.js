@@ -68,7 +68,6 @@ recognition.onerror = (event) => {
     console.log('Error:', event.error);
 };
 
-
 // Predefined questions and answers in Filipino
 const questions = [
     { question: "Ano ang pangunahing layunin ng Balagtasan?", answer: "sa pamamagitan ng tula." },
@@ -102,8 +101,10 @@ function displayInstructions() {
 
 // Start timer and speech recognition
 function startTimer() {
+    if (recognition && recognition.status !== 'started' && recognition.status !== 'starting') {
+        recognition.start(); // Start speech recognition
+    }
     timeLeft = 10;
-    timerElement.innerText = timeLeft;
     timer = setInterval(() => {
         if (timeLeft <= 0) {
             clearInterval(timer);
@@ -113,12 +114,10 @@ function startTimer() {
             return;
         }
         timerElement.innerText = timeLeft;
-        timeLeft--;
+        timeLeft--; // Move this line after updating the timerElement
     }, 1000);
-    if (recognition && recognition.status !== 'started' && recognition.status !== 'starting') {
-        recognition.start(); // Start speech recognition
-    }
 }
+google_api_key= "AIzaSyD-1J2J9Z9Q1J9Q1J9Q1J9Q1J9Q1J9Q1J9";
 
 // Get a random question from predefined list
 function getRandomQuestion() {
