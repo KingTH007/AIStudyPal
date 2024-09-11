@@ -22,11 +22,9 @@ recognition.maxAlternatives = 1;
 // Check if microphone is available
 navigator.mediaDevices.getUserMedia({ audio: true })
     .then(() => {
-        // Microphone is available, enable the start button
-        startButton.disabled = false;
+        startButton.disabled = false; // Enable the start button
     })
     .catch((error) => {
-        // Microphone is not available, show an error message
         alert('Microphone is not available. Please make sure your microphone is connected and enabled.');
         console.error(error);
     });
@@ -37,7 +35,6 @@ recognition.onerror = (event) => {
 
     let errorMessage = 'An error occurred';
 
-    // Provide detailed error messages
     switch (event.error) {
         case 'network':
             errorMessage = 'Network error occurred. Please check your internet connection.';
@@ -63,8 +60,6 @@ recognition.onerror = (event) => {
     addMessageToChatBox(aiFeedback.parentNode, errorMessage, 'system');
     speakAIText(errorMessage);
     micIcon.style.filter = 'grayscale(100%)'; // Turn off mic indicator
-
-    // Log error for debugging
     console.log('Error:', event.error);
 };
 
@@ -86,6 +81,21 @@ let currentQuestion = {};
 const instructionText = "Pindutin ang Start button upang simulan ang pagsasanay. Pagkatapos, magsasalita ang AI at maaari mong sagutin gamit ang iyong boses.";
 const readyPrompt = "Handa ka na bang magsimula? Sabihin 'oo' upang magpatuloy.";
 
+// Start button click handler
+startButton.addEventListener('click', function () {
+    if (!isStarted) {
+        displayInstructions(); // Show instructions and prompt
+        startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start Speaking'; // Change button text and icon
+        recognition.start(); // Start listening for readiness
+        micIcon.style.filter = 'none'; // Show mic is active
+        isStarted = true;
+    } else {
+        recognition.stop(); // Stop listening for readiness
+        startButton.style.display = 'none'; // Hide the button
+        displayAndSpeakQuestion(); // Start asking questions
+    }
+});
+
 // Track button state
 let isStarted = false;
 
@@ -96,14 +106,10 @@ function displayInstructions() {
     speakAIText(instructionText);
     addMessageToChatBox(aiText.parentNode, readyPrompt, 'system');
     speakAIText(readyPrompt);
-    console.log('displayInstructions', isStarted);
 }
 
 // Start timer and speech recognition
 function startTimer() {
-    if (recognition && recognition.status !== 'started' && recognition.status !== 'starting') {
-        recognition.start(); // Start speech recognition
-    }
     timeLeft = 10;
     timer = setInterval(() => {
         if (timeLeft <= 0) {
@@ -114,10 +120,9 @@ function startTimer() {
             return;
         }
         timerElement.innerText = timeLeft;
-        timeLeft--; // Move this line after updating the timerElement
+        timeLeft--;
     }, 1000);
 }
-google_api_key= "AIzaSyD-1J2J9Z9Q1J9Q1J9Q1J9Q1J9Q1J9Q1J9";
 
 // Get a random question from predefined list
 function getRandomQuestion() {
@@ -170,34 +175,16 @@ function addMessageToChatBox(messageElement, text, type) {
     if (paragraph) {
         paragraph.innerText = text;
     } else {
-        console.log('no paragraph found');
+        console.log('No paragraph found');
     }
     messageClone.classList.add(type === 'system' ? 'ai-message' : 'user-message');
     chatBox.appendChild(messageClone);
-    chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
-
-// Start button click handler
-startButton.addEventListener('click', function () {
-    if (!isStarted) {
-        displayInstructions(); // Show instructions and prompt
-        startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start Speaking'; // Change button text and icon
-        recognition.start(); // Start listening for readiness
-        micIcon.style.filter = 'none'; // Show mic is active
-        isStarted = true;
-        console.log('isStarted', isStarted);
-    } else {
-        recognition.stop(); // Stop listening for readiness
-        startButton.style.display = 'none'; // Hide the button
-        displayAndSpeakQuestion(); // Start asking questions
-        console.log('isStarted', isStarted);
-    }
-    console.log('Button clicked.');
-});
 
 // Clear chat box and reset button on page load
 window.addEventListener('load', () => {
     chatBox.innerHTML = ''; // Clear chat box on page load
     startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start'; // Set button text to 'Start'
-    isStarted = false;
+    isStarted = false; // Reset the start state
 });
