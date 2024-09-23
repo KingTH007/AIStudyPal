@@ -101,11 +101,15 @@ let isStarted = false;
 
 // Display instructions and prompt
 function displayInstructions() {
-    chatBox.innerHTML = ''; // Clear chat box before adding new messages
+
+    alert(instructionText);
+    alert(readyPrompt);
+
+    /*chatBox.innerHTML = ''; // Clear chat box before adding new messages
     addMessageToChatBox(aiText.parentNode, instructionText, 'system');
     speakAIText(instructionText);
     addMessageToChatBox(aiText.parentNode, readyPrompt, 'system');
-    speakAIText(readyPrompt);
+    speakAIText(readyPrompt);*/
 }
 
 // Start timer and speech recognition
@@ -187,7 +191,8 @@ window.addEventListener('load', () => {
     chatBox.innerHTML = ''; // Clear chat box on page load
     startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start'; // Set button text to 'Start'
     isStarted = false; // Reset the start state
-
+    
     const voices = window.speechSynthesis.getVoices();
     console.log(voices); 
+
 });
