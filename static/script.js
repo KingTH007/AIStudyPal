@@ -101,15 +101,11 @@ let isStarted = false;
 
 // Display instructions and prompt
 function displayInstructions() {
-
     alert(instructionText);
-    alert(readyPrompt);
 
-    /*chatBox.innerHTML = ''; // Clear chat box before adding new messages
-    addMessageToChatBox(aiText.parentNode, instructionText, 'system');
-    speakAIText(instructionText);
+    chatBox.innerHTML = '';
     addMessageToChatBox(aiText.parentNode, readyPrompt, 'system');
-    speakAIText(readyPrompt);*/
+    speakAIText(readyPrompt);
 }
 
 // Start timer and speech recognition
