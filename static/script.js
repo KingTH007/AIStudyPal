@@ -81,11 +81,11 @@ const questions = [
 let timer;
 let timeLeft = 10;
 let currentQuestion = {};
-let askedQuestions = []; // Track asked questions
+let askedQuestions = []; // Array to keep track of asked questions
 
 // Instructions and prompt
 const instructionText = "Pindutin ang Start button upang simulan ang pagsasanay. Pagkatapos, magsasalita ang AI at maaari mong sagutin gamit ang iyong boses.";
-const readyPrompt = "Handa ka na bang magsimula? upang magpatuloy pindutin ang 'start recording'.";
+const readyPrompt = "Handa ka na bang magsimula? upang magpatuloy pindutin ang 'start speaking'.";
 
 // Start button click handler
 startButton.addEventListener('click', function () {
@@ -93,6 +93,8 @@ startButton.addEventListener('click', function () {
         displayInstructions(); // Show instructions and prompt
         startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start Speaking'; // Change button text and icon
         isStarted = true;
+    } else if (startButton.innerHTML.includes('Restart')) {
+        restartGame(); // Reset game if Restart button is clicked
     } else {
         startButton.style.display = 'none'; // Hide the button
         displayAndSpeakQuestion(); // Start asking questions
@@ -136,29 +138,27 @@ function startTimer() {
 
 // Get a random question from predefined list
 function getRandomQuestion() {
-    const unansweredQuestions = questions.filter(q => !askedQuestions.includes(q));
-    
-    if (unansweredQuestions.length === 0) {
-        return null; // No more questions to ask
+    if (askedQuestions.length === questions.length) {
+        // All questions have been asked
+        return null;
     }
+    let question;
+    do {
+        const index = Math.floor(Math.random() * questions.length);
+        question = questions[index];
+    } while (askedQuestions.includes(question));
 
-    const index = Math.floor(Math.random() * unansweredQuestions.length);
-    return unansweredQuestions[index];
+    askedQuestions.push(question); // Mark question as asked
+    return question;
 }
 
 // Display question and speak it
 function displayAndSpeakQuestion() {
     currentQuestion = getRandomQuestion();
-    
     if (!currentQuestion) {
-        // No more questions available
-        endQuiz();
+        endGame(); // End the game if all questions are asked
         return;
     }
-
-    // Mark the current question as asked
-    askedQuestions.push(currentQuestion);
-
     aiText.innerText = currentQuestion.question;
     addMessageToChatBox(aiText.parentNode, currentQuestion.question, 'system');
     speakAIText(currentQuestion.question);
@@ -213,22 +213,22 @@ if (recognition) {
     };
 }
 
-// End the quiz
-function endQuiz() {
+// End the game when all questions are asked
+function endGame() {
     clearInterval(timer); // Stop the timer
-    aiFeedback.innerText = "Natapos na ang lahat ng mga tanong.";
+    aiFeedback.innerText = "Tapos na ang mga tanong.";
     addMessageToChatBox(aiFeedback.parentNode, aiFeedback.innerText, 'system');
     speakAIText(aiFeedback.innerText);
-    
-    // Disable voice recognition and show restart button
-    if (recognition) {
-        recognition.stop();
-        micIcon.style.filter = 'grayscale(100%)'; // Turn off mic indicator
-    }
-    
-    // Show the restart button
-    startButton.style.display = 'block';
-    startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Restart'; // Change button text to "Restart"
+    micIcon.style.filter = 'grayscale(100%)'; // Turn off mic indicator
+    startButton.innerHTML = 'Restart'; // Change button to Restart
+}
+
+// Restart the game
+function restartGame() {
+    chatBox.innerHTML = ''; // Clear chat box
+    askedQuestions = []; // Reset asked questions
+    startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start'; // Set button text to 'Start'
+    isStarted = false; // Reset the start state
 }
 
 // Add messages to chatbox
@@ -249,9 +249,7 @@ function addMessageToChatBox(messageElement, text, type) {
 window.addEventListener('load', () => {
     chatBox.innerHTML = ''; // Clear chat box on page load
     startButton.innerHTML = '<img src="../static/image/mic-icon.png"  alt="Mic" id="mic-icon"> Start'; // Set button text to 'Start'
-    startButton.style.display = 'block'; // Ensure the button is visible
     isStarted = false; // Reset the start state
-    askedQuestions = []; // Clear asked questions list
     
     const voices = window.speechSynthesis.getVoices();
     console.log(voices); 
