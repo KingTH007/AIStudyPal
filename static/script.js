@@ -7,61 +7,68 @@ const startButton = document.getElementById('start-speech');
 const chatBox = document.querySelector('.chat-box');
 const micIcon = document.getElementById('mic-icon');
 
-// Check if SpeechRecognition is supported
-if (!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)) {
-    alert('Speech Recognition is not supported by your browser. Please use Google Chrome or another compatible browser.');
-    throw new Error('Speech Recognition not supported.');
+// Speech Recognition initialization for cross-browser compatibility
+let recognition;
+
+if ('webkitSpeechRecognition' in window) {
+    recognition = new webkitSpeechRecognition();  // For Chrome and Edge
+} else if ('SpeechRecognition' in window) {
+    recognition = new SpeechRecognition();  // For standard browsers supporting SpeechRecognition
+} else {
+    alert('Speech recognition is not supported by your browser. Please use Chrome, Edge, or another supported browser.');
+    recognition = null;
 }
 
 // Initialize Speech Recognition
-const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-recognition.lang = 'tl-PH';
-recognition.interimResults = false;
-recognition.maxAlternatives = 1;
+if (recognition) {
+    recognition.lang = 'tl-PH';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
 
-// Check if microphone is available
-navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(() => {
-        startButton.disabled = false; // Enable the start button
-    })
-    .catch((error) => {
-        alert('Microphone is not available. Please make sure your microphone is connected and enabled.');
-        console.error(error);
-    });
+    // Check if microphone is available
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(() => {
+            startButton.disabled = false; // Enable the start button
+        })
+        .catch((error) => {
+            alert('Microphone is not available. Please make sure your microphone is connected and enabled.');
+            console.error(error);
+        });
 
-// Handle speech recognition errors
-recognition.onerror = (event) => {
-    clearInterval(timer); // Stop the timer
+    // Handle speech recognition errors
+    recognition.onerror = (event) => {
+        clearInterval(timer); // Stop the timer
 
-    let errorMessage = 'An error occurred';
+        let errorMessage = 'An error occurred';
 
-    switch (event.error) {
-        case 'network':
-            errorMessage = 'Network error occurred. Please check your internet connection.';
-            break;
-        case 'no-speech':
-            errorMessage = 'No speech detected. Please try speaking louder or closer to the microphone.';
-            break;
-        case 'audio-capture':
-            errorMessage = 'Audio capture error. Ensure your microphone is properly connected.';
-            break;
-        case 'not-allowed':
-            errorMessage = 'Permission to use the microphone is denied. Please grant microphone access.';
-            break;
-        case 'service-not-allowed':
-            errorMessage = 'Speech recognition service is not available. Please try again later.';
-            break;
-        default:
-            errorMessage = `Error occurred: ${event.error}`;
-            break;
-    }
+        switch (event.error) {
+            case 'network':
+                errorMessage = 'Network error occurred. Please check your internet connection.';
+                break;
+            case 'no-speech':
+                errorMessage = 'No speech detected. Please try speaking louder or closer to the microphone.';
+                break;
+            case 'audio-capture':
+                errorMessage = 'Audio capture error. Ensure your microphone is properly connected.';
+                break;
+            case 'not-allowed':
+                errorMessage = 'Permission to use the microphone is denied. Please grant microphone access.';
+                break;
+            case 'service-not-allowed':
+                errorMessage = 'Speech recognition service is not available. Please try again later.';
+                break;
+            default:
+                errorMessage = `Error occurred: ${event.error}`;
+                break;
+        }
 
-    aiFeedback.innerText = errorMessage;
-    addMessageToChatBox(aiFeedback.parentNode, errorMessage, 'system');
-    speakAIText(errorMessage);
-    micIcon.style.filter = 'grayscale(100%)'; // Turn off mic indicator
-    console.log('Error:', event.error);
-};
+        aiFeedback.innerText = errorMessage;
+        addMessageToChatBox(aiFeedback.parentNode, errorMessage, 'system');
+        speakAIText(errorMessage);
+        micIcon.style.filter = 'grayscale(100%)'; // Turn off mic indicator
+        console.log('Error:', event.error);
+    };
+}
 
 // Predefined questions and answers in Filipino
 const questions = [
@@ -103,8 +110,10 @@ function displayInstructions() {
     chatBox.innerHTML = '';
     addMessageToChatBox(aiText.parentNode, readyPrompt, 'system');
     speakAIText(readyPrompt, () => {
-        recognition.start(); // Start voice recognition after AI speech ends
-        micIcon.style.filter = 'none'; // Show mic is active
+        if (recognition) {
+            recognition.start(); // Start voice recognition after AI speech ends if supported
+            micIcon.style.filter = 'none'; // Show mic is active
+        }
     });
 }
 
@@ -154,26 +163,28 @@ function speakAIText(text, callback) {
 }
 
 // Handle speech recognition results
-recognition.onresult = (event) => {
-    clearInterval(timer); // Stop the timer
-    const transcript = event.results[0][0].transcript;
-    userText.innerText = `Sinabi mo: ${transcript}`;
-    addMessageToChatBox(userText.parentNode, `Sinabi mo: ${transcript}`, 'user');
-    speakAIText(userText.innerText);
+if (recognition) {
+    recognition.onresult = (event) => {
+        clearInterval(timer); // Stop the timer
+        const transcript = event.results[0][0].transcript;
+        userText.innerText = `Sinabi mo: ${transcript}`;
+        addMessageToChatBox(userText.parentNode, `Sinabi mo: ${transcript}`, 'user');
+        speakAIText(userText.innerText);
 
-    // Check the user's answer and provide feedback
-    const correctAnswer = currentQuestion.answer;
-    const isCorrect = transcript.toLowerCase().includes(correctAnswer.toLowerCase());
+        // Check the user's answer and provide feedback
+        const correctAnswer = currentQuestion.answer;
+        const isCorrect = transcript.toLowerCase().includes(correctAnswer.toLowerCase());
 
-    aiFeedback.innerText = isCorrect ? "Tama ang sagot!" : "Mali ang sagot. Ang tamang sagot ay: " + correctAnswer;
-    addMessageToChatBox(aiFeedback.parentNode, aiFeedback.innerText, 'system');
-    speakAIText(aiFeedback.innerText);
+        aiFeedback.innerText = isCorrect ? "Tama ang sagot!" : "Mali ang sagot. Ang tamang sagot ay: " + correctAnswer;
+        addMessageToChatBox(aiFeedback.parentNode, aiFeedback.innerText, 'system');
+        speakAIText(aiFeedback.innerText);
 
-    micIcon.style.filter = 'grayscale(100%)'; // Turn off mic indicator
+        micIcon.style.filter = 'grayscale(100%)'; // Turn off mic indicator
 
-    // Automatically move to the next question
-    displayAndSpeakQuestion();
-};
+        // Automatically move to the next question
+        displayAndSpeakQuestion();
+    };
+}
 
 // Add messages to chatbox
 function addMessageToChatBox(messageElement, text, type) {
