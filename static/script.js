@@ -86,11 +86,8 @@ startButton.addEventListener('click', function () {
     if (!isStarted) {
         displayInstructions(); // Show instructions and prompt
         startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start Speaking'; // Change button text and icon
-        recognition.start(); // Start listening for readiness
-        micIcon.style.filter = 'none'; // Show mic is active
         isStarted = true;
     } else {
-        recognition.stop(); // Stop listening for readiness
         startButton.style.display = 'none'; // Hide the button
         displayAndSpeakQuestion(); // Start asking questions
     }
@@ -105,7 +102,10 @@ function displayInstructions() {
 
     chatBox.innerHTML = '';
     addMessageToChatBox(aiText.parentNode, readyPrompt, 'system');
-    speakAIText(readyPrompt);
+    speakAIText(readyPrompt, () => {
+        recognition.start(); // Start voice recognition after AI speech ends
+        micIcon.style.filter = 'none'; // Show mic is active
+    });
 }
 
 // Start timer and speech recognition
@@ -139,10 +139,17 @@ function displayAndSpeakQuestion() {
     startTimer(); // Start timer when question is displayed
 }
 
-// Convert text to speech
-function speakAIText(text) {
+// Convert text to speech with a callback when done
+function speakAIText(text, callback) {
     const speech = new SpeechSynthesisUtterance(text);
     speech.lang = 'tl-PH'; // Tagalog language
+
+    speech.onend = function () {
+        if (typeof callback === 'function') {
+            callback(); // Call the callback function after speech ends
+        }
+    };
+
     window.speechSynthesis.speak(speech);
 }
 
@@ -190,5 +197,4 @@ window.addEventListener('load', () => {
     
     const voices = window.speechSynthesis.getVoices();
     console.log(voices); 
-
 });
