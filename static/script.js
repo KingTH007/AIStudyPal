@@ -81,10 +81,11 @@ const questions = [
 let timer;
 let timeLeft = 10;
 let currentQuestion = {};
+let askedQuestions = []; // Track asked questions
 
 // Instructions and prompt
 const instructionText = "Pindutin ang Start button upang simulan ang pagsasanay. Pagkatapos, magsasalita ang AI at maaari mong sagutin gamit ang iyong boses.";
-const readyPrompt = "Handa ka na bang magsimula? Sabihin 'oo' upang magpatuloy.";
+const readyPrompt = "Handa ka na bang magsimula? upang magpatuloy pindutin ang 'start recording'.";
 
 // Start button click handler
 startButton.addEventListener('click', function () {
@@ -135,13 +136,29 @@ function startTimer() {
 
 // Get a random question from predefined list
 function getRandomQuestion() {
-    const index = Math.floor(Math.random() * questions.length);
-    return questions[index];
+    const unansweredQuestions = questions.filter(q => !askedQuestions.includes(q));
+    
+    if (unansweredQuestions.length === 0) {
+        return null; // No more questions to ask
+    }
+
+    const index = Math.floor(Math.random() * unansweredQuestions.length);
+    return unansweredQuestions[index];
 }
 
 // Display question and speak it
 function displayAndSpeakQuestion() {
     currentQuestion = getRandomQuestion();
+    
+    if (!currentQuestion) {
+        // No more questions available
+        endQuiz();
+        return;
+    }
+
+    // Mark the current question as asked
+    askedQuestions.push(currentQuestion);
+
     aiText.innerText = currentQuestion.question;
     addMessageToChatBox(aiText.parentNode, currentQuestion.question, 'system');
     speakAIText(currentQuestion.question);
@@ -196,6 +213,24 @@ if (recognition) {
     };
 }
 
+// End the quiz
+function endQuiz() {
+    clearInterval(timer); // Stop the timer
+    aiFeedback.innerText = "Natapos na ang lahat ng mga tanong.";
+    addMessageToChatBox(aiFeedback.parentNode, aiFeedback.innerText, 'system');
+    speakAIText(aiFeedback.innerText);
+    
+    // Disable voice recognition and show restart button
+    if (recognition) {
+        recognition.stop();
+        micIcon.style.filter = 'grayscale(100%)'; // Turn off mic indicator
+    }
+    
+    // Show the restart button
+    startButton.style.display = 'block';
+    startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Restart'; // Change button text to "Restart"
+}
+
 // Add messages to chatbox
 function addMessageToChatBox(messageElement, text, type) {
     const messageClone = messageElement.cloneNode(true);
@@ -214,7 +249,9 @@ function addMessageToChatBox(messageElement, text, type) {
 window.addEventListener('load', () => {
     chatBox.innerHTML = ''; // Clear chat box on page load
     startButton.innerHTML = '<img src="../static/image/mic-icon.png"  alt="Mic" id="mic-icon"> Start'; // Set button text to 'Start'
+    startButton.style.display = 'block'; // Ensure the button is visible
     isStarted = false; // Reset the start state
+    askedQuestions = []; // Clear asked questions list
     
     const voices = window.speechSynthesis.getVoices();
     console.log(voices); 
