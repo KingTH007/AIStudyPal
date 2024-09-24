@@ -38,9 +38,7 @@ if (recognition) {
     // Handle speech recognition errors
     recognition.onerror = (event) => {
         clearInterval(timer); // Stop the timer
-
         let errorMessage = 'An error occurred';
-
         switch (event.error) {
             case 'network':
                 errorMessage = 'Network error occurred. Please check your internet connection.';
@@ -127,6 +125,8 @@ function startTimer() {
             aiFeedback.innerText = "Wala kang sagot. Subukan ulit.";
             addMessageToChatBox(aiFeedback.parentNode, aiFeedback.innerText, 'system');
             speakAIText(aiFeedback.innerText);
+            // Automatically move to the next question if time runs out
+            displayAndSpeakQuestion();
         } else {
             timeLeft--; // Decrease time
         }
@@ -146,6 +146,11 @@ function displayAndSpeakQuestion() {
     addMessageToChatBox(aiText.parentNode, currentQuestion.question, 'system');
     speakAIText(currentQuestion.question);
     startTimer(); // Start timer when question is displayed
+
+    // Stop speech recognition while AI is speaking
+    if (recognition) {
+        recognition.stop();
+    }
 }
 
 // Convert text to speech with a callback when done
@@ -156,6 +161,11 @@ function speakAIText(text, callback) {
     speech.onend = function () {
         if (typeof callback === 'function') {
             callback(); // Call the callback function after speech ends
+            // Start speech recognition after AI has finished speaking
+            if (recognition) {
+                recognition.start();
+                micIcon.style.filter = 'none'; // Show mic is active again
+            }
         }
     };
 
@@ -203,7 +213,7 @@ function addMessageToChatBox(messageElement, text, type) {
 // Clear chat box and reset button on page load
 window.addEventListener('load', () => {
     chatBox.innerHTML = ''; // Clear chat box on page load
-    startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start'; // Set button text to 'Start'
+    startButton.innerHTML = '<img src="../static/image/mic-icon.png"  alt="Mic" id="mic-icon"> Start'; // Set button text to 'Start'
     isStarted = false; // Reset the start state
     
     const voices = window.speechSynthesis.getVoices();
