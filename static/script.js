@@ -112,15 +112,15 @@ function displayInstructions() {
 function startTimer() {
     timeLeft = 10;
     timer = setInterval(() => {
+        timerElement.innerText = timeLeft;
         if (timeLeft <= 0) {
             clearInterval(timer);
             aiFeedback.innerText = "Wala kang sagot. Subukan ulit.";
             addMessageToChatBox(aiFeedback.parentNode, aiFeedback.innerText, 'system');
             speakAIText(aiFeedback.innerText);
-            return;
+        } else {
+            timeLeft--; // Decrease time
         }
-        timerElement.innerText = timeLeft;
-        timeLeft--;
     }, 1000);
 }
 
