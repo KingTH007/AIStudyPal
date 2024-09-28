@@ -1,56 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudyPal AI</title>
-    <link rel="stylesheet" href="../static/style.css">
-</head>
-<body>
-    <!-- Navigator -->
-    <nav class="Navigator">
-        <ul class="nav_line">
-            <li><a href="#">Subject</a></li>
-            <li><a href="#">Forum</a></li>
-            <li><a href="#">About</a></li>
-        </ul>
-        <div class="buttons">
-            <a class="su" href="#"><button>SIGN UP</button></a>
-            <a class="si" href="#"><button>SIGN IN</button></a>
-        </div>
-    </nav>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>StudyPal AI</title>
+        <link rel="stylesheet" href="../static/style.css">
+    </head>
+    <body>
+        <!-- Navigator -->
+        <nav class="Navigator">
+            <ul class="nav_line">
+                <li><a href="#">Subject</a></li>
+                <li><a href="#">Forum</a></li>
+                <li><a href="#">About</a></li>
+            </ul>
+            <div class="buttons">
+                <a class="su" href="#"><button>SIGN UP</button></a>
+                <a class="si" href="#"><button>SIGN IN</button></a>
+            </div>
+        </nav>
 
-    <!-- Chatbox -->
-    <div class="chat-container">
-        <!-- Chat Area (Scrollable) -->
-        <div class="chat-box">
-            <!-- AI Question and Response Bubbles -->
-            <div class="message ai-message" id="ai-message">
-                <p id="ai-text"></p>
+        <!-- Chatbox -->
+        <div class="chat-container">
+            <!-- Chat Area (Scrollable) -->
+            <div class="chat-box">
+                <!-- AI Question and Response Bubbles -->
+                <div class="message ai-message" id="ai-message">
+                    <p id="ai-text"></p>
+                </div>
+
+                <!-- User Response Bubble -->
+                <div class="message user-message" id="user-message">
+                    <p id="user-text"></p>
+                </div>
+
+                <!-- AI Feedback Bubble -->
+                <div class="message ai-message" id="ai-feedback-message">
+                    <p id="ai-feedback"></p>
+                </div>
             </div>
 
-            <!-- User Response Bubble -->
-            <div class="message user-message" id="user-message">
-                <p id="user-text"></p>
-            </div>
-
-            <!-- AI Feedback Bubble -->
-            <div class="message ai-message" id="ai-feedback-message">
-                <p id="ai-feedback"></p>
+            <!-- Timer and Input Button -->
+            <div class="user-input">
+                <div id="timer" class="timer">10 : Timer</div>
+                <button id="start-speech">
+                    <img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start
+                </button>
             </div>
         </div>
 
-        <!-- Timer and Input Button -->
-        <div class="user-input">
-            <div id="timer" class="timer">10 : Timer</div>
-            <button id="start-speech">
-                <img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start
-            </button>
-        </div>
-    </div>
-
-    <!-- Link to JavaScript file -->
-    <script src="../static/script.js"> </script>
-
-</body>
+        <!-- Link to JavaScript file -->
+        <script src="../static/script.js"> </script>
+    </body>
 </html>

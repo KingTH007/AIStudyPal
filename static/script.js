@@ -38,6 +38,7 @@ if (recognition) {
     // Handle speech recognition errors
     recognition.onerror = (event) => {
         clearInterval(timer); // Stop the timer
+        console.error('Speech recognition error:', event.error); // Log the exact error
         let errorMessage = 'An error occurred';
         switch (event.error) {
             case 'network':
@@ -59,13 +60,13 @@ if (recognition) {
                 errorMessage = `Error occurred: ${event.error}`;
                 break;
         }
-
+    
         aiFeedback.innerText = errorMessage;
         addMessageToChatBox(aiFeedback.parentNode, errorMessage, 'system');
         speakAIText(errorMessage);
         micIcon.style.filter = 'grayscale(100%)'; // Turn off mic indicator
-        console.log('Error:', event.error);
     };
+    
 }
 
 // Predefined questions and answers in Filipino
@@ -170,24 +171,38 @@ function displayAndSpeakQuestion() {
     }
 }
 
-// Convert text to speech with a callback when done
+navigator.mediaDevices.getUserMedia({ audio: true })
+    .then((stream) => {
+        startButton.disabled = false; // Enable the start button
+        console.log("Microphone is available");
+    })
+    .catch((error) => {
+        alert('Microphone is not available. Please make sure your microphone is connected and enabled.');
+        console.error('Microphone access error:', error);
+    });
+
+// Ensure recognition restarts after AI finishes speaking
 function speakAIText(text, callback) {
     const speech = new SpeechSynthesisUtterance(text);
-    speech.lang = 'tl-PH'; // Tagalog language
+    speech.lang = 'tl-PH';
 
     speech.onend = function () {
+        console.log('AI speech ended.');
         if (typeof callback === 'function') {
-            callback(); // Call the callback function after speech ends
-            // Start speech recognition after AI has finished speaking
-            if (recognition) {
-                recognition.start();
-                micIcon.style.filter = 'none'; // Show mic is active again
-            }
+            callback(); // Start recognition again after speech ends
+        }
+
+        // Start speech recognition after AI speech ends
+        if (recognition) {
+            console.log('Starting speech recognition after AI speech...');
+            recognition.start();
+            micIcon.style.filter = 'none'; // Show mic is active
         }
     };
 
     window.speechSynthesis.speak(speech);
 }
+
 
 // Handle speech recognition results
 if (recognition) {
