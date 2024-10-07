@@ -6,6 +6,7 @@ const timerElement = document.getElementById('timer');
 const startButton = document.getElementById('start-speech');
 const chatBox = document.querySelector('.chat-box');
 const micIcon = document.getElementById('mic-icon');
+const scoreElement = document.getElementById('score');
 
 // Speech Recognition initialization for cross-browser compatibility
 let recognition;
@@ -77,6 +78,10 @@ const questions = [
     { question: "Anong anyo ng panitikan ang nagbibigay ng magagandang aral o gabay sa pamumuhay?", answer: "salawikain" },
     { question: "Anong akdang may kinalaman sa kathang-isip, pag-ibig, at kasaysayan?", answer: "panitikan" }
 ];
+
+// Score
+let score = 0;
+const maxScore = 10;
 
 // Timer
 let timer;
@@ -217,7 +222,14 @@ if (recognition) {
         const correctAnswer = currentQuestion.answer;
         const isCorrect = transcript.toLowerCase().includes(correctAnswer.toLowerCase());
 
-        aiFeedback.innerText = isCorrect ? "Tama ang sagot!" : "Mali ang sagot. Ang tamang sagot ay: " + correctAnswer;
+        if (isCorrect) {
+            aiFeedback.innerText = "Tama ang sagot!";
+            score += 2; // Increase score by 2 points for each correct answer
+        } else {
+            aiFeedback.innerText = `Mali ang sagot. Ang tamang sagot ay: ${correctAnswer}`;
+        }
+
+        scoreElement.innerText = `Score: ${score}/${maxScore}`; // Update score display
         addMessageToChatBox(aiFeedback.parentNode, aiFeedback.innerText, 'system');
         speakAIText(aiFeedback.innerText);
 
@@ -234,8 +246,12 @@ function endGame() {
     aiFeedback.innerText = "Tapos na ang mga tanong.";
     addMessageToChatBox(aiFeedback.parentNode, aiFeedback.innerText, 'system');
     speakAIText(aiFeedback.innerText);
+    
     micIcon.style.filter = 'grayscale(100%)'; // Turn off mic indicator
     startButton.innerHTML = 'Restart'; // Change button to Restart
+
+    // Display final score
+    scoreElement.innerText = `Final Score: ${score}/${maxScore}`;
 }
 
 // Restart the game
