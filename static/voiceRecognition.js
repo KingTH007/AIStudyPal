@@ -2,7 +2,6 @@
 
 let recognition;
 let micIcon = document.getElementById('mic-icon');
-const startButton = document.getElementById('start-speech');
 
 // Speech Recognition initialization for cross-browser compatibility
 if ('webkitSpeechRecognition' in window) {

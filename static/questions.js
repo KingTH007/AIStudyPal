@@ -10,7 +10,6 @@ const questions = [
 ];
 
 let askedQuestions = []; // Array to keep track of asked questions
-let currentQuestion = {};
 
 // Get a random question from predefined list
 function getRandomQuestion() {
