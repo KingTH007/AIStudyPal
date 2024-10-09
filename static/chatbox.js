@@ -1,7 +1,11 @@
 // chatbox.js
 
-let isStarted = false;
+let isStarted = false; // Track if the game has started
+let currentQuestion = {};
+let score = 0;
+const maxScore = 10;
 
+// Elements
 const aiText = document.getElementById('ai-text');
 const userText = document.getElementById('user-text');
 const aiFeedback = document.getElementById('ai-feedback');
@@ -10,11 +14,9 @@ const startButton = document.getElementById('start-speech');
 const chatBox = document.querySelector('.chat-box');
 const scoreElement = document.getElementById('score');
 
-// Timer
-let timer;
-let timeLeft = 10;
-let score = 0;
-const maxScore = 10;
+// Instructions and prompt
+const instructionText = "Pindutin ang Start button upang simulan ang pagsasanay. Pagkatapos, magsasalita ang AI at maaari mong sagutin gamit ang iyong boses.";
+const readyPrompt = "Handa ka na bang magsimula? upang magpatuloy pindutin ang 'start speaking'.";
 
 // Start button click handler
 startButton.addEventListener('click', function () {
@@ -22,8 +24,6 @@ startButton.addEventListener('click', function () {
         displayInstructions(); // Show instructions and prompt
         startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start Speaking'; // Change button text and icon
         isStarted = true;
-    } else if (startButton.innerHTML.includes('Restart')) {
-        restartGame(); // Reset game if Restart button is clicked
     } else {
         startButton.style.display = 'none'; // Hide the button
         displayAndSpeakQuestion(); // Start asking questions
@@ -35,27 +35,12 @@ function displayInstructions() {
     alert(instructionText);
     chatBox.innerHTML = '';
     addMessageToChatBox(aiText.parentNode, readyPrompt, 'system');
-    speakAIText(readyPrompt, startRecognition);
+    speakAIText(readyPrompt, () => {
+        startRecognition(handleUserResponse); // Start voice recognition after AI speech ends
+    });
 }
 
-// Start timer for answering
-function startTimer() {
-    timeLeft = 10;
-    timer = setInterval(() => {
-        timerElement.innerText = timeLeft;
-        if (timeLeft <= 0) {
-            clearInterval(timer);
-            aiFeedback.innerText = "Wala kang sagot. Subukan ulit.";
-            addMessageToChatBox(aiFeedback.parentNode, aiFeedback.innerText, 'system');
-            speakAIText(aiFeedback.innerText);
-            displayAndSpeakQuestion();
-        } else {
-            timeLeft--; // Decrease time
-        }
-    }, 1000);
-}
-
-// Display question and start speech
+// Display question and speak it
 function displayAndSpeakQuestion() {
     currentQuestion = getRandomQuestion();
     if (!currentQuestion) {
@@ -65,38 +50,66 @@ function displayAndSpeakQuestion() {
     aiText.innerText = currentQuestion.question;
     addMessageToChatBox(aiText.parentNode, currentQuestion.question, 'system');
     speakAIText(currentQuestion.question);
-    startTimer();
+}
+
+// Handle user response
+function handleUserResponse(transcript) {
+    userText.innerText = `Sinabi mo: ${transcript}`;
+    addMessageToChatBox(userText.parentNode, `Sinabi mo: ${transcript}`, 'user');
+
+    const correctAnswer = currentQuestion.answer;
+    const isCorrect = transcript.toLowerCase().includes(correctAnswer.toLowerCase());
+
+    if (isCorrect) {
+        aiFeedback.innerText = "Tama ang sagot!";
+        score += 2; // Increase score by 2 points for each correct answer
+    } else {
+        aiFeedback.innerText = `Mali ang sagot. Ang tamang sagot ay: ${correctAnswer}`;
+    }
+
+    scoreElement.innerText = `Score: ${score}/${maxScore}`; // Update score display
+    addMessageToChatBox(aiFeedback.parentNode, aiFeedback.innerText, 'system');
+    speakAIText(aiFeedback.innerText);
+
+    displayAndSpeakQuestion(); // Automatically move to the next question
 }
 
 // End the game when all questions are asked
 function endGame() {
-    clearInterval(timer);
     aiFeedback.innerText = "Tapos na ang mga tanong.";
     addMessageToChatBox(aiFeedback.parentNode, aiFeedback.innerText, 'system');
     speakAIText(aiFeedback.innerText);
     startButton.innerHTML = 'Restart'; // Change button to Restart
-    scoreElement.innerText = `Final Score: ${score}/${maxScore}`;
 }
 
-// Add messages to the chatbox
-function addMessageToChatBox(parent, message, role) {
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message', role);
-    messageDiv.innerHTML = `<span>${message}</span>`;
-    parent.appendChild(messageDiv);
-    chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
+// Function to add messages to chatbox
+function addMessageToChatBox(messageElement, text, type) {
+    const messageClone = messageElement.cloneNode(true);
+    const paragraph = messageClone.querySelector('p');
+    if (paragraph) {
+        paragraph.innerText = text;
+    }
+    messageClone.classList.add(type === 'system' ? 'ai-message' : 'user-message');
+    chatBox.appendChild(messageClone);
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-window.onload = function() {
-    // All your JavaScript logic here
-    console.log("Chatbox JS loaded!");
+// Function to speak AI text
+function speakAIText(text, callback) {
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = 'tl-PH';
 
-    // Example: Interacting with DOM elements safely after load
-    const chatBox = document.querySelector('.chat-box');
-    const startButton = document.getElementById('start-speech');
-    
-    startButton.addEventListener('click', function() {
-        console.log('Start button clicked!');
-        // Your other logic here
-    });
-};
+    speech.onend = function () {
+        if (typeof callback === 'function') {
+            callback(); // Call the callback after speech ends
+        }
+    };
+
+    window.speechSynthesis.speak(speech);
+}
+
+// Clear chat box and reset button on page load
+window.addEventListener('load', () => {
+    chatBox.innerHTML = ''; // Clear chat box on page load
+    startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start'; // Set button text to 'Start'
+});
