@@ -1,7 +1,7 @@
 // chatbox.js
 
 let isStarted = false; // Track if the game has started
-let currentQuestion = {};
+let currentQuestion = {}; // Declare currentQuestion only once
 let score = 0;
 const maxScore = 10;
 

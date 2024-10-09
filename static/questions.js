@@ -43,6 +43,7 @@ window.onload = function() {
     
     startButton.addEventListener('click', function() {
         console.log('Start button clicked!');
+        console.log('question');
         // Your other logic here
     });
 };

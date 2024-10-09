@@ -2,6 +2,7 @@
 
 let recognition;
 let micIcon = document.getElementById('mic-icon');
+const startButton = document.getElementById('start-speech');
 
 // Speech Recognition initialization for cross-browser compatibility
 if ('webkitSpeechRecognition' in window) {
@@ -41,7 +42,7 @@ if (recognition) {
 }
 
 // Start speech recognition
-function startRecognition() {
+function startRecognition(callback) {
     if (recognition) {
         recognition.start();
         micIcon.style.filter = 'none'; // Show mic is active
@@ -134,6 +135,7 @@ window.onload = function() {
     
     startButton.addEventListener('click', function() {
         console.log('Start button clicked!');
+        console.log('voice');
         // Your other logic here
     });
 };
