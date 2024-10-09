@@ -32,18 +32,3 @@ function resetQuestions() {
     askedQuestions = [];
 }
 
-window.onload = function() {
-    // All your JavaScript logic here
-    console.log("Chatbox JS loaded!");
-
-    // Example: Interacting with DOM elements safely after load
-    const chatBox = document.querySelector('.chat-box');
-    const startButton = document.getElementById('start-speech');
-    
-    startButton.addEventListener('click', function() {
-        console.log('Start button clicked!');
-        console.log('question');
-        // Your other logic here
-    });
-};
-
