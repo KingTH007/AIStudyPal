@@ -1,5 +1,7 @@
 // chatbox.js
 
+let isStarted = false;
+
 const aiText = document.getElementById('ai-text');
 const userText = document.getElementById('user-text');
 const aiFeedback = document.getElementById('ai-feedback');
