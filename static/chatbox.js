@@ -84,3 +84,17 @@ function addMessageToChatBox(parent, message, role) {
     parent.appendChild(messageDiv);
     chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
 }
+
+window.onload = function() {
+    // All your JavaScript logic here
+    console.log("Chatbox JS loaded!");
+
+    // Example: Interacting with DOM elements safely after load
+    const chatBox = document.querySelector('.chat-box');
+    const startButton = document.getElementById('start-speech');
+    
+    startButton.addEventListener('click', function() {
+        console.log('Start button clicked!');
+        // Your other logic here
+    });
+};
