@@ -6,7 +6,10 @@ const aiFeedback = document.getElementById('ai-feedback');
 const timerElement = document.getElementById('timer');
 const startButton = document.getElementById('start-speech');
 const chatBox = document.querySelector('.chat-box');
+const micIcon = document.getElementById('mic-icon');
 const scoreElement = document.getElementById('score');
+
+let isStarted = false;
 
 // Timer
 let timer;
