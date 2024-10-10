@@ -1,7 +1,7 @@
-// voiceRecognition.js
-
+// Declare recognition globally
 let recognition;
 let micIcon = document.getElementById('mic-icon');
+let recognitionActive = false; // Track if recognition is active
 
 // Speech Recognition initialization for cross-browser compatibility
 if ('webkitSpeechRecognition' in window) {
@@ -15,7 +15,7 @@ if ('webkitSpeechRecognition' in window) {
 
 // Initialize Speech Recognition
 if (recognition) {
-    recognition.lang = 'tl-PH';
+    recognition.lang = 'tl-PH';  // Use Filipino language
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
@@ -38,25 +38,30 @@ if (recognition) {
     recognition.onresult = (event) => {
         handleSpeechResult(event);
     };
+
+    // Ensure recognition stops when needed
+    recognition.onend = function () {
+        recognitionActive = false; // Reset flag when recognition ends
+    };
 }
 
 // Start speech recognition
 function startRecognition(callback) {
-    if (recognition) {
-        recognition.start();
+    if (recognition && !recognitionActive) {
+        recognition.start(); // Only start recognition if it's not already running
         micIcon.style.filter = 'none'; // Show mic is active
+        recognitionActive = true; // Set flag to indicate that recognition has started
     }
 }
 
 // Handle speech recognition results
 function handleSpeechResult(event) {
-    clearInterval(timer); // Stop the timer
+    recognitionActive = false; // Reset flag when recognition finishes
     const transcript = event.results[0][0].transcript;
     userText.innerText = `Sinabi mo: ${transcript}`;
     addMessageToChatBox(userText.parentNode, `Sinabi mo: ${transcript}`, 'user');
     speakAIText(userText.innerText);
 
-    // Check the user's answer and provide feedback
     const correctAnswer = currentQuestion.answer;
     const isCorrect = transcript.toLowerCase().includes(correctAnswer.toLowerCase());
 
@@ -72,15 +77,15 @@ function handleSpeechResult(event) {
     speakAIText(aiFeedback.innerText);
 
     micIcon.style.filter = 'grayscale(100%)'; // Turn off mic indicator
-
-    // Automatically move to the next question
-    displayAndSpeakQuestion();
+    recognitionActive = false; // Allow restarting recognition for the next question
+    displayAndSpeakQuestion(); // Automatically move to the next question
 }
 
 // Handle speech recognition errors
 function handleSpeechError(event) {
-    clearInterval(timer); // Stop the timer
+    recognitionActive = false; // Reset flag when error occurs
     console.error('Speech recognition error:', event.error); // Log the exact error
+
     let errorMessage = 'An error occurred';
 
     switch (event.error) {
@@ -105,21 +110,4 @@ function handleSpeechError(event) {
     addMessageToChatBox(aiFeedback.parentNode, errorMessage, 'system');
     speakAIText(errorMessage);
     micIcon.style.filter = 'grayscale(100%)'; // Turn off mic indicator
-}
-
-// Text-to-speech for AI
-function speakAIText(text, callback) {
-    const speech = new SpeechSynthesisUtterance(text);
-    speech.lang = 'tl-PH';
-
-    speech.onend = function () {
-        if (typeof callback === 'function') {
-            callback(); // Start recognition again after speech ends
-        }
-        if (recognition) {
-            startRecognition(); // Start recognition after AI speech
-        }
-    };
-
-    window.speechSynthesis.speak(speech);
 }

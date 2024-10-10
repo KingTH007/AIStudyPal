@@ -1,7 +1,5 @@
-// chatbox.js
-
-let isStarted = false; // Track if the game has started
-let currentQuestion = {}; // Declare currentQuestion only once
+let isStarted = false; 
+let currentQuestion = {};
 let score = 0;
 const maxScore = 10;
 
@@ -22,7 +20,7 @@ const readyPrompt = "Handa ka na bang magsimula? upang magpatuloy pindutin ang '
 startButton.addEventListener('click', function () {
     if (!isStarted) {
         displayInstructions(); // Show instructions and prompt
-        startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start Speaking'; // Change button text and icon
+        startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start Speaking';
         isStarted = true;
     } else {
         startButton.style.display = 'none'; // Hide the button
@@ -36,20 +34,40 @@ function displayInstructions() {
     chatBox.innerHTML = '';
     addMessageToChatBox(aiText.parentNode, readyPrompt, 'system');
     speakAIText(readyPrompt, () => {
-        startRecognition(handleUserResponse); // Start voice recognition after AI speech ends
+        startRecognition(handleUserResponse); 
     });
 }
 
-// Display question and speak it
+// Display and animate the question
 function displayAndSpeakQuestion() {
     currentQuestion = getRandomQuestion();
     if (!currentQuestion) {
-        endGame(); // End the game if all questions are asked
+        endGame(); 
         return;
     }
-    aiText.innerText = currentQuestion.question;
+    aiText.innerText = ''; // Clear previous question
     addMessageToChatBox(aiText.parentNode, currentQuestion.question, 'system');
-    speakAIText(currentQuestion.question);
+    
+    // Animate and speak the question
+    animateText(currentQuestion.question, () => {
+        speakAIText(currentQuestion.question, () => {
+            startRecognition(handleUserResponse);
+        });
+    });
+}
+
+// Animate text function
+function animateText(text, callback) {
+    aiText.innerText = ''; // Clear the AI text box
+    let index = 0;
+    const interval = setInterval(() => {
+        aiText.innerText += text.charAt(index);
+        index++;
+        if (index === text.length) {
+            clearInterval(interval);
+            if (callback) callback(); // Call the next function after animation ends
+        }
+    }, 100); // Speed of animation (100ms per character)
 }
 
 // Handle user response
@@ -62,27 +80,27 @@ function handleUserResponse(transcript) {
 
     if (isCorrect) {
         aiFeedback.innerText = "Tama ang sagot!";
-        score += 2; // Increase score by 2 points for each correct answer
+        score += 2; // Increase score
     } else {
         aiFeedback.innerText = `Mali ang sagot. Ang tamang sagot ay: ${correctAnswer}`;
     }
 
-    scoreElement.innerText = `Score: ${score}/${maxScore}`; // Update score display
+    scoreElement.innerText = `Score: ${score}/${maxScore}`;
     addMessageToChatBox(aiFeedback.parentNode, aiFeedback.innerText, 'system');
     speakAIText(aiFeedback.innerText);
 
-    displayAndSpeakQuestion(); // Automatically move to the next question
+    displayAndSpeakQuestion(); // Automatically move to next question
 }
 
-// End the game when all questions are asked
+// End the game
 function endGame() {
     aiFeedback.innerText = "Tapos na ang mga tanong.";
     addMessageToChatBox(aiFeedback.parentNode, aiFeedback.innerText, 'system');
     speakAIText(aiFeedback.innerText);
-    startButton.innerHTML = 'Restart'; // Change button to Restart
+    startButton.innerHTML = 'Restart'; 
 }
 
-// Function to add messages to chatbox
+// Add message to chatbox
 function addMessageToChatBox(messageElement, text, type) {
     const messageClone = messageElement.cloneNode(true);
     const paragraph = messageClone.querySelector('p');
@@ -94,22 +112,20 @@ function addMessageToChatBox(messageElement, text, type) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// Function to speak AI text
+// Speak AI text
 function speakAIText(text, callback) {
     const speech = new SpeechSynthesisUtterance(text);
     speech.lang = 'tl-PH';
-
     speech.onend = function () {
         if (typeof callback === 'function') {
-            callback(); // Call the callback after speech ends
+            callback(); 
         }
     };
-
     window.speechSynthesis.speak(speech);
 }
 
-// Clear chat box and reset button on page load
+// Reset chatbox on load
 window.addEventListener('load', () => {
-    chatBox.innerHTML = ''; // Clear chat box on page load
-    startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start'; // Set button text to 'Start'
+    chatBox.innerHTML = ''; 
+    startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start'; 
 });
