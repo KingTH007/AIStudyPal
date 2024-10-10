@@ -42,32 +42,43 @@ function displayInstructions() {
 function displayAndSpeakQuestion() {
     currentQuestion = getRandomQuestion();
     if (!currentQuestion) {
-        endGame(); 
+        endGame(); // End the game if all questions are asked
         return;
     }
-    aiText.innerText = ''; // Clear previous question
     addMessageToChatBox(aiText.parentNode, currentQuestion.question, 'system');
-    
-    // Animate and speak the question
-    animateText(currentQuestion.question, () => {
-        speakAIText(currentQuestion.question, () => {
-            startRecognition(handleUserResponse);
-        });
+
+    // Speak and animate the question
+    speakAIText(currentQuestion.question, function () {
+        // Enable speech recognition after AI has finished speaking
+        startRecognition(handleUserResponse);
     });
 }
 
 // Animate text function
+// Function to animate AI text word by word
 function animateText(text, callback) {
-    aiText.innerText = ''; // Clear the AI text box
-    let index = 0;
-    const interval = setInterval(() => {
-        aiText.innerText += text.charAt(index);
-        index++;
-        if (index === text.length) {
-            clearInterval(interval);
-            if (callback) callback(); // Call the next function after animation ends
+    let words = text.split(" "); // Split the text into words
+    let displayText = ""; // The text that will be displayed
+    let index = 0; // Current word index
+
+    console.log("Animating text: ", text); // Debugging
+
+    // Function to add each word with a delay
+    function displayNextWord() {
+        if (index < words.length) {
+            displayText += words[index] + " "; // Add the current word
+            aiText.innerText = displayText; // Update the AI text container
+            index++; // Move to the next word
+            console.log("Displaying word: ", words[index - 1]); // Debugging
+
+            setTimeout(displayNextWord, 300); // Delay between words (300ms)
+        } else if (typeof callback === 'function') {
+            console.log("Animation completed."); // Debugging
+            callback(); // Once all words are displayed, call the callback
         }
-    }, 100); // Speed of animation (100ms per character)
+    }
+
+    displayNextWord(); // Start animating text
 }
 
 // Handle user response
@@ -80,16 +91,17 @@ function handleUserResponse(transcript) {
 
     if (isCorrect) {
         aiFeedback.innerText = "Tama ang sagot!";
-        score += 2; // Increase score
+        score += 2; // Increase score by 2 points for each correct answer
     } else {
         aiFeedback.innerText = `Mali ang sagot. Ang tamang sagot ay: ${correctAnswer}`;
     }
 
-    scoreElement.innerText = `Score: ${score}/${maxScore}`;
+    scoreElement.innerText = `Score: ${score}/${maxScore}`; // Update score display
     addMessageToChatBox(aiFeedback.parentNode, aiFeedback.innerText, 'system');
-    speakAIText(aiFeedback.innerText);
-
-    displayAndSpeakQuestion(); // Automatically move to next question
+    speakAIText(aiFeedback.innerText, function () {
+        // After feedback is given, move to the next question
+        displayAndSpeakQuestion();
+    });
 }
 
 // End the game
@@ -114,14 +126,22 @@ function addMessageToChatBox(messageElement, text, type) {
 
 // Speak AI text
 function speakAIText(text, callback) {
-    const speech = new SpeechSynthesisUtterance(text);
-    speech.lang = 'tl-PH';
-    speech.onend = function () {
-        if (typeof callback === 'function') {
-            callback(); 
-        }
-    };
-    window.speechSynthesis.speak(speech);
+    animateText(text, function () {
+        const speech = new SpeechSynthesisUtterance(text);
+        speech.lang = 'tl-PH';
+
+        console.log("Speaking AI text: ", text); // Debugging
+
+        // When TTS finishes, call the callback function (e.g., enable mic)
+        speech.onend = function () {
+            console.log("Text-to-speech finished."); // Debugging
+            if (typeof callback === 'function') {
+                callback(); // Enable the mic after speech ends
+            }
+        };
+
+        window.speechSynthesis.speak(speech); // Start speaking
+    });
 }
 
 // Reset chatbox on load
