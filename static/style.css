@@ -69,6 +69,57 @@ li, a, button {
 .su button:hover, .si button:hover{
     background-color: #5dbd1d;
 }
+
+/* Dropdown Styles */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 8px;
+}
+
+.dropdown-content a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+}
+
+.dropdown-content a:hover {
+    background-color: #555;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropbtn {
+    color: white;
+    background-color: black;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+@media screen and (max-width: 768px) {
+    .dropdown-content {
+        position: static; /* Make dropdown responsive */
+        width: 100%; /* Full width */
+    }
+
+    .dropdown-content a {
+        padding: 10px 15px;
+        font-size: 12px;
+    }
+}
 /* END */
 
 /*Voice recognation */
