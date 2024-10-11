@@ -22,7 +22,6 @@ li, a, button {
     text-decoration: none;
 }
 
-
 /* Navigator */
 .Navigator {
     display: flex;
@@ -30,7 +29,13 @@ li, a, button {
     align-items: center;
     padding: 30px 3%;
     width: 100%;
-    background-color: black; /* Keep background black for the nav */
+    background-color: black;
+}
+
+.logo a {
+    font-size: 24px;
+    color: white;
+    text-decoration: none;
 }
 
 .nav_line {
@@ -70,7 +75,6 @@ li, a, button {
     background-color: #5dbd1d;
 }
 
-/* Dropdown Styles */
 .dropdown {
     position: relative;
     display: inline-block;
@@ -84,10 +88,11 @@ li, a, button {
     box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
     z-index: 1;
     border-radius: 8px;
+    margin-top: 5px;
 }
 
 .dropdown-content.show {
-    display: block; /* Show dropdown content when .show class is added */
+    display: block;
 }
 
 .dropdown-content a {
@@ -110,12 +115,45 @@ li, a, button {
     position: relative;
 }
 
-/* Arrow Styling */
-.arrow {
+
+.ri-arrow-down-s-line, .ri-arrow-up-s-line {
     margin-left: 5px;
     transition: transform 0.3s ease;
 }
+
+/* Hamburger Icon Styling */
+.hamburger-icon {
+    display: none; /* Initially hidden */
+    font-size: 24px; /* Size of the hamburger icon */
+    color: white; /* Color of the icon */
+    cursor: pointer; /* Change cursor to pointer */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .nav_line,
+    .buttons {
+        display: none; /* Hide nav items and buttons on small screens */
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 50px; /* Position below the nav */
+        left: 0;
+        background-color: black; /* Change background to match your design */
+        z-index: 1; /* Ensure it's above other elements */
+    }
+
+    .nav_line.show,
+    .buttons.show {
+        display: flex; /* Show the navigation when toggled */
+    }
+
+    .hamburger-icon {
+        display: block; /* Show the hamburger icon on small screens */
+    }
+}
 /* END */
+
 
 /*Voice recognation */
 .chat-container {
