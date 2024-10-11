@@ -38,7 +38,7 @@ function displayInstructions() {
     });
 }
 
-// Display and animate the question
+// Display and speak question
 function displayAndSpeakQuestion() {
     currentQuestion = getRandomQuestion();
     if (!currentQuestion) {
@@ -47,38 +47,11 @@ function displayAndSpeakQuestion() {
     }
     addMessageToChatBox(aiText.parentNode, currentQuestion.question, 'system');
 
-    // Speak and animate the question
+    // Speak the question
     speakAIText(currentQuestion.question, function () {
         // Enable speech recognition after AI has finished speaking
         startRecognition(handleUserResponse);
     });
-}
-
-// Animate text function
-// Function to animate AI text word by word
-function animateText(text, callback) {
-    let words = text.split(" "); // Split the text into words
-    let displayText = ""; // The text that will be displayed
-    let index = 0; // Current word index
-
-    console.log("Animating text: ", text); // Debugging
-
-    // Function to add each word with a delay
-    function displayNextWord() {
-        if (index < words.length) {
-            displayText += words[index] + " "; // Add the current word
-            aiText.innerText = displayText; // Update the AI text container
-            index++; // Move to the next word
-            console.log("Displaying word: ", words[index - 1]); // Debugging
-
-            setTimeout(displayNextWord, 300); // Delay between words (300ms)
-        } else if (typeof callback === 'function') {
-            console.log("Animation completed."); // Debugging
-            callback(); // Once all words are displayed, call the callback
-        }
-    }
-
-    displayNextWord(); // Start animating text
 }
 
 // Handle user response
@@ -126,22 +99,20 @@ function addMessageToChatBox(messageElement, text, type) {
 
 // Speak AI text
 function speakAIText(text, callback) {
-    animateText(text, function () {
-        const speech = new SpeechSynthesisUtterance(text);
-        speech.lang = 'tl-PH';
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = 'tl-PH';
 
-        console.log("Speaking AI text: ", text); // Debugging
+    console.log("Speaking AI text: ", text); // Debugging
 
-        // When TTS finishes, call the callback function (e.g., enable mic)
-        speech.onend = function () {
-            console.log("Text-to-speech finished."); // Debugging
-            if (typeof callback === 'function') {
-                callback(); // Enable the mic after speech ends
-            }
-        };
+    // When TTS finishes, call the callback function (e.g., enable mic)
+    speech.onend = function () {
+        console.log("Text-to-speech finished."); // Debugging
+        if (typeof callback === 'function') {
+            callback(); // Enable the mic after speech ends
+        }
+    };
 
-        window.speechSynthesis.speak(speech); // Start speaking
-    });
+    window.speechSynthesis.speak(speech); // Start speaking
 }
 
 // Reset chatbox on load
