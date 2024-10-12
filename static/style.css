@@ -7,11 +7,14 @@
 }
 
 body {
+    font-family: 'Montserrat', sans-serif;
     background-color: black;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column; /* Stack elements vertically */
+    height: 100vh; /* Full height of viewport */
+    overflow: hidden; /* Prevent scrolling of body */
 }
 
 li, a, button {
@@ -22,165 +25,146 @@ li, a, button {
     text-decoration: none;
 }
 
-/* Navigator */
-.Navigator {
+/* Basic Styling for the Navigator */
+/* Main Container */
+.main-container {
+    display: flex;
+    width: 100%;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: 250px;
+    background-color: #2d2d2d;
+    height: 100vh; /* Full viewport height */
+    overflow-y: auto; /* Add scrollbar */
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    position: relative; /* For proper positioning */
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Logo Styling */
+.logo {
+    list-style: none;
+    margin-bottom: 30px;
+    padding: 0;
+    font-size: 1.8rem;
+    color: white;
+    text-align: center;
+}
+
+.logo li a {
+    color: white;
+    text-decoration: none;
+}
+
+/* Sidebar Menu */
+.sidebar-menu {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.sidebar-menu > li {
+    margin-bottom: 10px;
+}
+
+/* Sidebar Links */
+.sidebar-menu a {
+    color: #ddd;
+    padding: 10px;
+    text-decoration: none;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 30px 3%;
-    width: 100%;
-    background-color: black;
+    background-color: #2d2d2d;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
 }
 
-.logo a {
-    font-size: 24px;
-    color: white;
-    text-decoration: none;
+.sidebar-menu a:hover {
+    background-color: #444;
+}
+
+/* Dropdown Content */
+.drop-content {
+    display: none;
+    list-style-type: none;
+    padding-left: 15px;
+    margin-top: 5px;
+}
+
+/* Show Dropdown when active */
+.drop-content.show {
+    display: block;
+}
+
+/* Indentation for Hierarchy */
+.subject-content {
+    padding-left: 15px;
+}
+
+.lesson-content {
+    padding-left: 15px;
+}
+
+/* Arrow Rotation */
+.ri-arrow-up-s-line {
+    transform: rotate(180deg);
 }
 
 .nav_line {
     list-style: none;
-    display: flex;
-    justify-content: center;
     flex: 1;
 }
 
-.nav_line li {
-    padding: 0 35px;
-}
-
-.nav_line li a {
-    transition: all 0.3s ease 0s;
-}
-
-.nav_line li a:hover {
-    color: #8aee0b;
-}
-
+/* Buttons (Sign Up/Sign In) */
 .buttons {
-    display: flex;
-    gap: 15px;
+    gap: 10px;
+    margin-top: 20px;
 }
 
-.su button, .si button {
-    padding: 6px 15px;
-    cursor: pointer;
+.su button,
+.si button {
+    padding: 10px;
     background-color: #61d813;
-    border: hidden;
-    border-radius: 500px;
-    transition: all 0.3s ease 0s;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    color: white;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
 }
 
-.su button:hover, .si button:hover{
+.su button:hover,
+.si button:hover {
     background-color: #5dbd1d;
 }
 
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #333;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-    z-index: 1;
-    border-radius: 8px;
-    margin-top: 5px;
-}
-
-.dropdown-content.show {
-    display: block;
-}
-
-.dropdown-content a {
-    color: white;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    font-size: 14px;
-}
-
-.dropdown-content a:hover {
-    background-color: #555;
-}
-
-.dropbtn {
-    color: white;
-    background-color: black;
-    padding: 10px;
-    border-radius: 5px;
-    position: relative;
-}
-
-
-.ri-arrow-down-s-line, .ri-arrow-up-s-line {
-    margin-left: 5px;
-    transition: transform 0.3s ease;
-}
-
-/* Hamburger Icon Styling */
-.hamburger-icon {
-    display: none; /* Initially hidden */
-    font-size: 24px; /* Size of the hamburger icon */
-    color: white; /* Color of the icon */
-    cursor: pointer; /* Change cursor to pointer */
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-    .nav_line,
-    .buttons {
-        display: none; /* Hide nav items and buttons on small screens */
-        flex-direction: column;
-        width: 100%;
-        position: absolute;
-        top: 50px; /* Position below the nav */
-        left: 0;
-        background-color: black; /* Change background to match your design */
-        z-index: 1; /* Ensure it's above other elements */
-    }
-
-    .nav_line.show,
-    .buttons.show {
-        display: flex; /* Show the navigation when toggled */
-    }
-
-    .hamburger-icon {
-        display: block; /* Show the hamburger icon on small screens */
-    }
-}
-/* END */
-
-
-/*Voice recognation */
+/*---------------------*/
+/* Chat container */
 .chat-container {
-    width: 100%;
-    max-width: 800px;  /* Max width for mobile-first design */
-    background-color: #808080;  /* Grey background for container */
-    border-radius: 20px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    flex-grow: 1;
+    background-color: #8a8484;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    height: 80vh; /* Takes up most of the viewport */
-    overflow: hidden;
-    justify-content: space-between; /* Ensure input stays at bottom */
-    padding: 15px;
-    margin: auto; /* Center the container */
-    margin-top: 50px; /* Add some space from the top */
-    border: none;
+    height: 100vh;
 }
 
 /* Chatbox with overflow */
 .chat-box {
-    flex: 1;  /* Takes the available height */
-    overflow-y: auto;  /* Allows scrolling for the chat */
-    padding: 15px;
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 10px;  /* Spacing between messages */
+    gap: 15px;
 }
 
 /* AI and User message bubbles */
@@ -196,14 +180,14 @@ li, a, button {
 
 /* AI message (align left, grey bubble) */
 .ai-message {
-    background-color: #f1f0f0;  /* Light grey */
+    background-color: #f1f0f0;
     align-self: flex-start;
     color: #333;
 }
 
 /* User message (align right, blue bubble) */
 .user-message {
-    background-color: #0084ff;  /* Messenger blue */
+    background-color: #0084ff;
     align-self: flex-end;
     color: white;
 }
@@ -217,35 +201,34 @@ li, a, button {
     border-top: 1px solid #ddd;
 }
 
-button {
+.user-input button {
     padding: 10px 20px;
     background-color: #5cb85c;
     color: white;
     border: none;
     cursor: pointer;
     border-radius: 20px;
-    font-size: 16px;
     display: flex;
     align-items: center;
     gap: 10px;
+    transition: background-color 0.3s ease;
 }
 
-button img {
+.user-input button:hover {
+    background-color: #4cae4c;
+}
+
+.user-input button img {
     width: 20px;
     height: 20px;
 }
 
-button:hover {
-    background-color: #4cae4c;
-}
-
-/* Timer and Score Styling */
-.timer, .score {
-    font-size: 16px;
-    color: #fff;
+.timer,
+.score {
+    color: white;
     background-color: #333;
-    border-radius: 10px;
     padding: 5px 10px;
+    border-radius: 8px;
 }
 
 .timer {
@@ -253,6 +236,82 @@ button:hover {
 }
 
 .score {
-    margin-left: 20px;
     font-weight: bold;
+}
+
+/* Responsive Styles for Mobile */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -250px; /* Hidden by default */
+        width: 250px;
+        height: 100%;
+        background-color: #2d2d2d;
+        transition: left 0.3s ease-in-out;
+        z-index: 1001;
+    }
+
+    .sidebar.show {
+        left: 0; /* Slide in */
+    }
+
+    .hamburger-icon {
+        display: block;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        font-size: 24px;
+        cursor: pointer;
+        color: white;
+        z-index: 1002;
+    }
+
+    /* Overlay for Mobile */
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+    }
+
+    .overlay.show {
+        display: block;
+    }
+
+    /* Hide Sidebar Menu by Default on Mobile */
+    .sidebar-menu,
+    .buttons {
+        display: block;
+    }
+
+    /* Sidebar Menu Links */
+    .sidebar-menu a {
+        padding: 10px 15px;
+    }
+
+    /* Adjust Indentation for Mobile */
+    .drop-content {
+        padding-left: 20px;
+    }
+
+    /* Ensure Dropdowns Expand Properly */
+    .drop-content.show {
+        display: block;
+    }
+
+    /* Adjust Logo Position on Mobile */
+    .logo {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Adjust Buttons on Mobile */
+    .buttons {
+        margin-top: auto; /* Push buttons to the bottom */
+    }
 }
