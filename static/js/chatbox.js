@@ -3,6 +3,7 @@ let isStarted = false;
 let currentQuestion = {};
 let score = 0;
 const maxScore = 10;
+let timerInterval; // Timer variable
 
 // Elements
 const aiText = document.getElementById('ai-text');
@@ -13,11 +14,25 @@ const startButton = document.getElementById('start-speech');
 const chatBox = document.querySelector('.chat-box');
 const scoreElement = document.getElementById('score');
 
-// Instructions and prompt
-const instructionText = "Pindutin ang Start button upang simulan ang pagsasanay. Pagkatapos, magsasalita ang AI at maaari mong sagutin gamit ang iyong boses.";
-const readyPrompt = "Handa ka na bang magsimula? upang magpatuloy pindutin ang 'start speaking'.";
+// Function to display and speak the AI's question
+function displayAndSpeakQuestion() {
+    currentQuestion = getRandomQuestion();
+    if (!currentQuestion) {
+        endGame(); // End the game if all questions are asked
+        return;
+    }
 
-// Start button click handler
+    // Display the question in the chatbox
+    addMessageToChatBox(aiText.parentNode, currentQuestion.question, 'system');
+
+    // Speak the question
+    speakAIText(currentQuestion.question, function () {
+        startTimer(); // Start the timer after AI finishes speaking
+        startRecognition(handleUserResponse); // Start voice recognition after the question is spoken
+    });
+}
+
+// Function to start the game
 startButton.addEventListener('click', function () {
     if (!isStarted) {
         displayInstructions(); // Show instructions and prompt
@@ -29,38 +44,34 @@ startButton.addEventListener('click', function () {
     }
 });
 
-// Display instructions and prompt
+// Function to start the timer
+function startTimer() {
+    let timeLeft = 5; // Example: 5 seconds per question
+    timerElement.innerText = `${timeLeft} : Timer`;
+
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        timerElement.innerText = `${timeLeft} : Timer`;
+
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            timerElement.innerText = 'Time is up!';
+            handleUserResponse(''); // Trigger empty response if time runs out
+        }
+    }, 1000);
+}
+
+// Function to stop the timer
+function stopTimer() {
+    clearInterval(timerInterval); // Stop the timer
+}
+
+// Display instructions
 function displayInstructions() {
-    alert(instructionText);
-    chatBox.innerHTML = '';
-    addMessageToChatBox(aiText.parentNode, readyPrompt, 'system');
-    speakAIText(readyPrompt, () => {
-        startRecognition(handleUserResponse); 
-    });
-}
-
-// Display and speak question
-function displayAndSpeakQuestion() {
-    currentQuestion = getRandomQuestion();
-    if (!currentQuestion) {
-        endGame(); // End the game if all questions are asked
-        return;
-    }
-    addMessageToChatBox(aiText.parentNode, currentQuestion.question, 'system');
-
-    // Speak the question
-    speakAIText(currentQuestion.question, function () {
-        // Enable speech recognition after AI has finished speaking
-        startRecognition(handleUserResponse);
-    });
-}
-
-// End the game
-function endGame() {
-    aiFeedback.innerText = "Tapos na ang mga tanong.";
-    addMessageToChatBox(aiFeedback.parentNode, aiFeedback.innerText, 'system');
-    speakAIText(aiFeedback.innerText);
-    startButton.innerHTML = 'Restart'; 
+    alert("Pindutin ang Start button upang simulan ang pagsasanay. Pagkatapos, magsasalita ang AI at maaari mong sagutin gamit ang iyong boses.");
+    chatBox.innerHTML = ''; // Clear chatbox
+    addMessageToChatBox(aiText.parentNode, "Handa ka na bang magsimula? Pindutin ang Start Speaking.", 'system');
+    speakAIText("Handa ka na bang magsimula? Pindutin ang Start Speaking."); 
 }
 
 // Add message to chatbox
@@ -72,21 +83,41 @@ function addMessageToChatBox(messageElement, text, type) {
     }
     messageClone.classList.add(type === 'system' ? 'ai-message' : 'user-message');
     chatBox.appendChild(messageClone);
-    chatBox.scrollTop = chatBox.scrollHeight;
+    chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the latest message
 }
 
-// Speak AI text
+// Restart the game
+function restartGame() {
+    isStarted = false;
+    score = 0;
+    scoreElement.innerText = `Score: 0/${maxScore}`;
+    startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start';
+    startButton.style.display = 'block';
+    chatBox.innerHTML = ''; // Clear chatbox
+}
+
+// End the game
+function endGame() {
+    aiFeedback.innerText = "Tapos na ang mga tanong.";
+    addMessageToChatBox(aiFeedback.parentNode, aiFeedback.innerText, 'system');
+    speakAIText(aiFeedback.innerText, function () {
+        startButton.innerHTML = 'Restart';
+        startButton.style.display = 'block';
+        startButton.onclick = restartGame();
+    });
+}
+
 function speakAIText(text, callback) {
     const speech = new SpeechSynthesisUtterance(text);
-    speech.lang = 'tl-PH';
+    speech.lang = 'tl-PH'; // Tagalog language
 
     console.log("Speaking AI text: ", text); // Debugging
 
-    // When TTS finishes, call the callback function (e.g., enable mic)
+    // When TTS finishes, call the callback function (e.g., enable mic or start timer)
     speech.onend = function () {
         console.log("Text-to-speech finished."); // Debugging
         if (typeof callback === 'function') {
-            callback(); // Enable the mic after speech ends
+            callback(); // Trigger the next action when speaking ends
         }
     };
 
