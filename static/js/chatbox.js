@@ -1,4 +1,4 @@
-//chatbox.js
+// chatbox.js
 let isStarted = false; 
 let currentQuestion = {};
 let score = 0;
@@ -83,45 +83,32 @@ function addMessageToChatBox(messageElement, text, type) {
     }
     messageClone.classList.add(type === 'system' ? 'ai-message' : 'user-message');
     chatBox.appendChild(messageClone);
-    chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the latest message
-}
-
-// Restart the game
-function restartGame() {
-    isStarted = false;
-    score = 0;
-    scoreElement.innerText = `Score: 0/${maxScore}`;
-    startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start';
-    startButton.style.display = 'block';
-    chatBox.innerHTML = ''; // Clear chatbox
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 // End the game
 function endGame() {
+    stopTimer();
     aiFeedback.innerText = "Tapos na ang mga tanong.";
     addMessageToChatBox(aiFeedback.parentNode, aiFeedback.innerText, 'system');
     speakAIText(aiFeedback.innerText, function () {
-        startButton.innerHTML = 'Restart';
         startButton.style.display = 'block';
-        startButton.onclick = restartGame();
+        startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start Again';
     });
 }
 
 function speakAIText(text, callback) {
     const speech = new SpeechSynthesisUtterance(text);
-    speech.lang = 'tl-PH'; // Tagalog language
+    speech.lang = 'tl-PH'; 
 
-    console.log("Speaking AI text: ", text); // Debugging
-
-    // When TTS finishes, call the callback function (e.g., enable mic or start timer)
+    console.log("Speaking AI text: ", text);
     speech.onend = function () {
-        console.log("Text-to-speech finished."); // Debugging
+        console.log("Text-to-speech finished.");
         if (typeof callback === 'function') {
-            callback(); // Trigger the next action when speaking ends
+            callback();
         }
     };
-
-    window.speechSynthesis.speak(speech); // Start speaking
+    window.speechSynthesis.speak(speech);
 }
 
 // Reset chatbox on load
