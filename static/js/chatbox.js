@@ -1,3 +1,4 @@
+//chatbox.js
 let isStarted = false; 
 let currentQuestion = {};
 let score = 0;
