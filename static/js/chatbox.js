@@ -55,29 +55,6 @@ function displayAndSpeakQuestion() {
     });
 }
 
-// Handle user response
-function handleUserResponse(transcript) {
-    userText.innerText = `Sinabi mo: ${transcript}`;
-    addMessageToChatBox(userText.parentNode, `Sinabi mo: ${transcript}`, 'user');
-
-    const correctAnswer = currentQuestion.answer;
-    const isCorrect = transcript.toLowerCase().includes(correctAnswer.toLowerCase());
-
-    if (isCorrect) {
-        aiFeedback.innerText = "Tama ang sagot!";
-        score += 2; // Increase score by 2 points for each correct answer
-    } else {
-        aiFeedback.innerText = `Mali ang sagot. Ang tamang sagot ay: ${correctAnswer}`;
-    }
-
-    scoreElement.innerText = `Score: ${score}/${maxScore}`; // Update score display
-    addMessageToChatBox(aiFeedback.parentNode, aiFeedback.innerText, 'system');
-    speakAIText(aiFeedback.innerText, function () {
-        // After feedback is given, move to the next question
-        displayAndSpeakQuestion();
-    });
-}
-
 // End the game
 function endGame() {
     aiFeedback.innerText = "Tapos na ang mga tanong.";

@@ -34,7 +34,7 @@ function startTimer() {
     timerInterval = setInterval(() => {
         timeLeft--;
         timerElement.innerText = `${timeLeft} : Timer`;
-        
+
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
             timerElement.innerText = 'Time is up!';
@@ -126,6 +126,8 @@ function speakAIText(text, callback) {
 
     window.speechSynthesis.speak(speech); // Start speaking
 }
+
+
 
 // Display instructions when the game starts
 function displayInstructions() {
