@@ -1,74 +1,83 @@
-let selectedLesson = null; // Tracks which lesson is selected
-const lesson1Content = `...`; // The full Lesson 1 content (as you've provided)
+document.addEventListener("DOMContentLoaded", function() {
+    // Get references to the chat-container and sidebar links
+    const chatContainer = document.querySelector(".chat-container .chat-box");
+    const filipinoSubjectLink = document.getElementById("filipino-subject");
+    const lesson1Link = document.getElementById("filipino-lesson-1");
 
-// Handle click event for Filipino Subject
-document.getElementById('filipino-subject').addEventListener('click', function (e) {
-    e.preventDefault(); // Prevent default link behavior
-    addMessageToChatBox("Napili mo ang Filipino na subject.", 'system');
-    selectedLesson = null; // Reset selected lesson
-});
+    // Define lesson content
+    const lesson1ContentText = `
+        Aralin 1: Panitikan (Kahulugan at Kahalagahan)
+        Panitikan: Ito ay nagmula sa salitang "pang-titik-an" na ang ibig sabihin ay literatura o mga akdang nasusulat.
+        KAHULUGAN NG PANITIKAN: Ang pilipinong salita ng “panitikan” ay nanggaling sa wikang latin na “littera”.
+        KAHALAGAHAN NG PAG-AARAL NG PANITIKANG PILIPINO:
+        - Mabatid ang kaugalian, tradisyon at kultura.
+        - Maipagmalaki ang manunulat na Pilipino.
+        - Mabatid ang mga akdang Pilipino.
+        - Mabatid ang sariling kahusayan, kapintasan at kahinaan.
+    `;
 
-// Handle click event for Filipino Lesson 1
-document.getElementById('filipino-lesson-1').addEventListener('click', function (e) {
-    e.preventDefault(); // Prevent default link behavior
-    addMessageToChatBox("Napili mo ang Lesson 1: 'Panitikan (Kahulugan at Kahalagahan)'.", 'system');
-    selectedLesson = 'lesson1'; // Set selected lesson to Lesson 1
-});
-
-// Handle Start button click event
-document.getElementById('start-speech').addEventListener('click', function () {
-    if (selectedLesson === 'lesson1') {
-        addMessageToChatBox("Simula na ang Lesson 1...", 'system');
-        addMessageToChatBox(lesson1Content, 'system'); // Add Lesson 1 content to chatbox
-        // After lesson content, start asking identification questions
-        displayAndSpeakQuestion();
-    } else {
-        alert('Pumili muna ng isang lesson bago pindutin ang Start.');
+    // Text-to-speech function for lesson content
+    function speakText(text) {
+        const speech = new SpeechSynthesisUtterance(text);
+        speech.lang = "tl-PH"; // Filipino language code
+        speech.rate = 1;
+        speechSynthesis.speak(speech);
     }
-});
 
-// Function to display and speak a random question
-function displayAndSpeakQuestion() {
-    currentQuestion = getRandomQuestion(); // Get a random question from the pool
-    if (!currentQuestion) {
-        endGame(); // If all questions are asked, end the game
-        return;
+    // Function to display Lesson 1 title with Start Lesson button
+    function showLesson1Title() {
+        chatContainer.innerHTML = `
+            <h2>Aralin 1: Panitikan and Karunungang-bayan </h2>
+            <button id="start-lesson-btn">Start Lesson</button>
+        `;
+
+        // Add event listener for Start Lesson button
+        document.getElementById("start-lesson-btn").addEventListener("click", showLesson1Content);
     }
-    addMessageToChatBox(currentQuestion.question, 'system'); // Add the question to the chatbox
-    speakAIText(currentQuestion.question, function () {
-        startRecognition(handleUserResponse); // Start speech recognition for user response
+
+    // Function to display full Lesson 1 content and initiate text-to-speech
+    function showLesson1Content() {
+        chatContainer.innerHTML = `
+            <h2>Aralin 1: Panitikan (Kahulugan at Kahalagahan)</h2>
+            <p><strong>PANITIKAN</strong>: Ito ay nagmula sa salitang "pang-titik-an" na ang ibig sabihin ay literatura o mga akdang nasusulat...</p>
+            <h4>KAHULUGAN NG PANITIKAN</h4>
+            <p>Ang pilipinong salita ng “panitikan” ay nanggaling sa wikang latin na “littera”...</p>
+            <h4>KAHALAGAHAN NG PAG-AARAL NG PANITIKANG PILIPINO</h4>
+            <ul>
+                <li>Mabatid ang kaugalian, tradisyon at kultura</li>
+                <li>Maipagmalaki ang manunulat na Pilipino</li>
+                <li>Mabatid ang mga akdang Pilipino</li>
+                <li>Mabatid ang sariling kahusayan, kapintasan at kahinaan</li>
+            </ul>
+        `;
+
+        // Start text-to-speech for lesson content
+        speakText(lesson1ContentText);
+    }
+
+    // Display the Filipino subject and list of lessons
+    filipinoSubjectLink.addEventListener("click", function(event) {
+        event.preventDefault();
+        chatContainer.innerHTML = `
+            <h2>FILIPINO SUBJECT</h2>
+            <ul>
+                <li><a href="#" id="lesson-1-link">Aralin 1</a></li>
+                <li><a href="#">Aralin 2</a></li>
+                <li><a href="#">Aralin 3</a></li>
+                <li><a href="#">Aralin 4</a></li>
+            </ul>
+        `;
+
+        // Add event listener to the dynamically created Lesson 1 link
+        document.getElementById("lesson-1-link").addEventListener("click", function(e) {
+            e.preventDefault();
+            showLesson1Title(); // Display the Lesson 1 title when clicked from Filipino subject list
+        });
     });
-}
 
-// Handle user's response after AI asks a question
-function handleUserResponse(transcript) {
-    addMessageToChatBox(`Sinabi mo: ${transcript}`, 'user'); // Add user response to chatbox
-
-    const correctAnswer = currentQuestion.answer;
-    const isCorrect = transcript.toLowerCase().includes(correctAnswer.toLowerCase());
-
-    const feedback = isCorrect ? "Tama ang sagot!" : `Mali ang sagot. Ang tamang sagot ay: ${correctAnswer}`;
-    addMessageToChatBox(feedback, 'system');
-    speakAIText(feedback, function () {
-        if (isCorrect) {
-            score += 2;
-        }
-        scoreElement.innerText = `Score: ${score}/${maxScore}`; // Update score
-        displayAndSpeakQuestion(); // Move to the next question
+    // Add event listener for Lesson 1 in the sidebar
+    lesson1Link.addEventListener("click", function(event) {
+        event.preventDefault();
+        showLesson1Title(); // Display the Lesson 1 title when clicked directly from the sidebar
     });
-}
-
-// Function to add messages to the chatbox without clearing it
-function addMessageToChatBox(text, type) {
-    const messageElement = document.createElement('div');
-    messageElement.classList.add(type === 'system' ? 'ai-message' : 'user-message');
-    messageElement.innerHTML = `<p>${text}</p>`;
-    chatBox.appendChild(messageElement);
-    chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the latest message
-}
-
-// Reset chatbox and start button on page load
-window.addEventListener('load', () => {
-    chatBox.innerHTML = ''; 
-    startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start'; 
 });

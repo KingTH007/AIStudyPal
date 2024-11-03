@@ -1,20 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 * {
+    font-family: 'Montserrat', sans-serif;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
 body {
-    font-family: 'Montserrat', sans-serif;
     background-color: black;
     margin: 0;
     padding: 0;
     display: flex;
-    flex-direction: column; /* Stack elements vertically */
-    height: 100vh; /* Full height of viewport */
-    overflow: hidden; /* Prevent scrolling of body */
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
 }
 
 li, a, button {
@@ -25,7 +25,6 @@ li, a, button {
     text-decoration: none;
 }
 
-/* Basic Styling for the Navigator */
 /* Main Container */
 .main-container {
     display: flex;
@@ -37,12 +36,11 @@ li, a, button {
     width: 250px;
     background-color: #2d2d2d;
     height: 100vh; /* Full viewport height */
-    overflow-y: auto; /* Add scrollbar */
-    border-top-left-radius: 15px;
-    border-bottom-left-radius: 15px;
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
     padding: 20px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    position: relative; /* For proper positioning */
+    position: relative;
     transition: transform 0.3s ease-in-out;
 }
 
@@ -123,13 +121,18 @@ li, a, button {
 
 /* Buttons (Sign Up/Sign In) */
 .buttons {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
     gap: 10px;
-    margin-top: 20px;
 }
 
 .su button,
 .si button {
     padding: 10px;
+    width: 100px; /* Set width to align buttons */
     background-color: #61d813;
     border: none;
     border-radius: 20px;
@@ -137,6 +140,7 @@ li, a, button {
     color: white;
     font-size: 16px;
     transition: background-color 0.3s ease;
+    text-align: center;
 }
 
 .su button:hover,
@@ -149,8 +153,6 @@ li, a, button {
 .chat-container {
     flex-grow: 1;
     background-color: #8a8484;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -238,6 +240,30 @@ li, a, button {
 .score {
     font-weight: bold;
 }
+
+/* Style for disabled links with grey-out effect and lock icon */
+.disabled {
+    pointer-events: none;
+    color: grey;
+    cursor: not-allowed;
+    position: relative;
+}
+
+.disabled::before {
+    content: '\f023'; /* Unicode for lock icon if using Font Awesome */
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    color: grey;
+    position: absolute;
+    left: -20px; /* Adjust spacing as needed */
+}
+
+/* Style for enabled links */
+.enabled {
+    color: black; /* or any color you prefer for active links */
+    cursor: pointer;
+}
+
 
 /* Responsive Styles for Mobile */
 @media (max-width: 768px) {

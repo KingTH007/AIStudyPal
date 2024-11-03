@@ -1,21 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Hamburger Icon and Overlay
-    const hamburgerIcon = document.querySelector('.hamburger-icon');
-    const sidebar = document.querySelector('.sidebar');
-    const overlay = document.querySelector('.overlay');
-
-    // Toggle Sidebar and Overlay
-    hamburgerIcon.addEventListener('click', function () {
-        sidebar.classList.toggle('show');
-        overlay.classList.toggle('show');
-    });
-
-    // Hide Sidebar and Overlay when clicking on Overlay
-    overlay.addEventListener('click', function () {
-        sidebar.classList.remove('show');
-        overlay.classList.remove('show');
-    });
-
     // Main Subject Dropdown Toggle
     const mainDropdown = document.querySelector('.dropdown > a');
     const mainDropContent = document.querySelector('.dropdown .drop-content');
@@ -26,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
         mainDropContent.classList.toggle('show');
         const expanded = this.getAttribute('aria-expanded') === 'true' || false;
         this.setAttribute('aria-expanded', !expanded);
+
         // Toggle arrow direction
         const arrow = this.querySelector('.ri-arrow-down-s-line');
         arrow.classList.toggle('ri-arrow-up-s-line');
