@@ -135,38 +135,30 @@ window.addEventListener('load', () => {
     setFilipinoVoice(); // Load voices on page load
 });
 
-// Function to disable all quiz links with grey-out and lock icon
-function disableQuizzes() {
-    const quizLinks = document.querySelectorAll('.lesson-content a');
-    quizLinks.forEach(link => {
-        link.classList.add('disabled');
-        link.classList.remove('enabled');
-    });
-}
+//FOR IDENTIFICATION LESSON 1
+document.getElementById('identify1-quiz').addEventListener('click', function (event) {
+    event.preventDefault(); // Prevent default link behavior
 
-// Function to enable all quiz links, removing grey-out and lock icon
-function enableQuizzes() {
-    const quizLinks = document.querySelectorAll('.lesson-content a');
-    quizLinks.forEach(link => {
-        link.classList.remove('disabled');
-        link.classList.add('enabled');
-    });
-}
-
-// Run this on page load to disable quizzes initially
-document.addEventListener('DOMContentLoaded', () => {
-    disableQuizzes();
+    // Reset and start the identification quiz
+    resetIdentificationQuestions(); // Clear previous asked questions
+    startButton.style.display = 'none'; // Hide the start button initially
+    displayAndSpeakIdentificationQuestion(); // Start the first question
 });
 
-// Assume this function is called when Lesson 1’s text-to-speech lecture completes
-/*function onLessonOneComplete() {
-    enableQuizzes();
-}
+// Function to display and speak an identification question
+function displayAndSpeakIdentificationQuestion() {
+    currentQuestion = getIdentificationQuestion();
+    if (!currentQuestion) {
+        endGame(); // End the game if all questions are asked
+        return;
+    }
 
-// Example: Simulating completion of text-to-speech
-// Replace this with the actual event handler for your text-to-speech
-document.getElementById('filipino-lesson-1').addEventListener('click', () => {
-    // Trigger Lesson 1 content and text-to-speech
-    setTimeout(onLessonOneComplete, 5000); // Simulate 5 seconds of lecture
-});
-*/
+    // Display the question in the chatbox
+    addMessageToChatBox(aiText.parentNode, currentQuestion.question, 'system');
+
+    // Speak the question
+    speakAIText(currentQuestion.question, function () {
+        startTimer(); // Start the timer after AI finishes speaking
+        startRecognition(handleUserResponse); // Start voice recognition after the question is spoken
+    });
+}
