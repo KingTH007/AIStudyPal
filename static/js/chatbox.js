@@ -1,4 +1,4 @@
-// chatbox.js
+//chatbox.js
 let isStarted = false; 
 let currentQuestion = {};
 let score = 0;
@@ -13,6 +13,37 @@ const timerElement = document.getElementById('timer');
 const startButton = document.getElementById('start-speech');
 const chatBox = document.querySelector('.chat-box');
 const scoreElement = document.getElementById('score');
+
+// Variable to store the selected voice for Filipino
+let filipinoVoice = null;
+
+// Load voices and select Filipino-compatible voice
+function setFilipinoVoice() {
+    const voices = window.speechSynthesis.getVoices();
+    filipinoVoice = voices.find(voice => 
+        voice.lang === "fil-PH" || voice.lang.startsWith("tl") || voice.lang.includes("Tagalog")
+    );
+}
+
+// Text-to-speech function for AI text
+function speakAIText(text, callback) {
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = 'tl-PH'; // Set Filipino language code
+
+    // Set Filipino-compatible voice if available
+    if (filipinoVoice) {
+        speech.voice = filipinoVoice;
+    }
+
+    console.log("Speaking AI text:", text);
+    speech.onend = function () {
+        console.log("Text-to-speech finished.");
+        if (typeof callback === 'function') {
+            callback();
+        }
+    };
+    window.speechSynthesis.speak(speech);
+}
 
 // Function to display and speak the AI's question
 function displayAndSpeakQuestion() {
@@ -70,8 +101,8 @@ function stopTimer() {
 function displayInstructions() {
     alert("Pindutin ang Start button upang simulan ang pagsasanay. Pagkatapos, magsasalita ang AI at maaari mong sagutin gamit ang iyong boses.");
     chatBox.innerHTML = ''; // Clear chatbox
-    addMessageToChatBox(aiText.parentNode, "Handa ka na bang magsimula? Pindutin ang Start Speaking.", 'system');
-    speakAIText("Handa ka na bang magsimula? Pindutin ang Start Speaking."); 
+    addMessageToChatBox(aiText.parentNode, "Handa ka na bang magsimula? Pindutin ang 'SIMULAN'.", 'system');
+    speakAIText("Handa ka na bang magsimula? Pindutin ang 'SIMULAN'."); 
 }
 
 // Add message to chatbox
@@ -97,26 +128,12 @@ function endGame() {
     });
 }
 
-function speakAIText(text, callback) {
-    const speech = new SpeechSynthesisUtterance(text);
-    speech.lang = 'tl-PH'; 
-
-    console.log("Speaking AI text: ", text);
-    speech.onend = function () {
-        console.log("Text-to-speech finished.");
-        if (typeof callback === 'function') {
-            callback();
-        }
-    };
-    window.speechSynthesis.speak(speech);
-}
-
 // Reset chatbox on load
 window.addEventListener('load', () => {
     chatBox.innerHTML = ''; 
     startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start'; 
+    setFilipinoVoice(); // Load voices on page load
 });
-
 
 // Function to disable all quiz links with grey-out and lock icon
 function disableQuizzes() {

@@ -16,10 +16,24 @@ document.addEventListener("DOMContentLoaded", function() {
         - Mabatid ang sariling kahusayan, kapintasan at kahinaan.
     `;
 
+    // Variable to store the selected voice for Tagalog
+    let filipinoVoice = null;
+
+    // Load voices and select Filipino-compatible voice
+    function setFilipinoVoice() {
+        const voices = window.speechSynthesis.getVoices();
+        filipinoVoice = voices.find(voice => 
+            voice.lang === "fil-PH" || voice.lang.startsWith("tl") || voice.lang.includes("Tagalog")
+        );
+    }
+
     // Text-to-speech function for lesson content
     function speakText(text) {
         const speech = new SpeechSynthesisUtterance(text);
         speech.lang = "tl-PH"; // Filipino language code
+        if (filipinoVoice) {
+            speech.voice = filipinoVoice; // Set Filipino voice if available
+        }
         speech.rate = 1;
         speechSynthesis.speak(speech);
     }
@@ -80,4 +94,7 @@ document.addEventListener("DOMContentLoaded", function() {
         event.preventDefault();
         showLesson1Title(); // Display the Lesson 1 title when clicked directly from the sidebar
     });
+
+    // Wait for voices to load before setting the Filipino voice
+    window.speechSynthesis.onvoiceschanged = setFilipinoVoice;
 });
