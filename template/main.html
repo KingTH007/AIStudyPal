@@ -71,28 +71,35 @@
 
         <!-- Chatbox -->
         <div class="chat-container">
-           <div class="chat-box">
-                <div class="message ai-message" id="ai-message">
-                    <p id="ai-text"></p>
-                </div>
+            <div class="quiz-box">
+            </div>
 
-                <div class="message user-message" id="user-message">
-                    <p id="user-text"></p>
-                </div>
+            <div class="chat-box">
 
-                <div class="message ai-message" id="ai-feedback-message">
-                    <p id="ai-feedback"></p>
-                </div>
             </div> 
 
+            <div class="popup-quiz">
+                <h1>Mga Tagubilin:</h1>
+                <span class="info">1. Sagutin ang bawat tanong sa loob ng 5 segundo.</span>
+                <span class="info">2. Ang bawat tamang sagot ay may katumbas na 2 puntos.</span>
+                <span class="info">3. Pindutin ng diin ang 'Mic Button' upang sabihin ang iyong sagot.</span>
+
+                <div class="btn-group">
+                    <button class="pop-btn exit">Alisin</button>
+                    <a href="" class="pop-btn continue">Magpatuloy</a>
+                </div>
+            </div>
+
+            <div class="overlay"></div>
+            
             <!-- Timer and Input Button -->
-            <div class="user-input">
+            <!-- <div class="user-input">
                 <div id="timer" class="timer">5 : Timer</div>
                 <div id="score" class="score">Score: 0/10</div>
                 <button id="start-speech">
                     <img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start
                 </button>
-            </div>
+            </div> -->
         </div>
     </div>
 
@@ -102,6 +109,7 @@
         <script src="../static/js/questions.js"></script>
         <script src="../static/js/chatbox.js"></script>
         <script src="../static/js/lesson.js"></script>
+        <script src="../static/js/instruction.js"></script>
 
     </body>
 </html>

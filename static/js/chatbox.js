@@ -63,20 +63,8 @@ function displayAndSpeakQuestion() {
     });
 }
 
-// Function to start the game
-startButton.addEventListener('click', function () {
-    if (!isStarted) {
-        displayInstructions(); // Show instructions and prompt
-        startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start Speaking';
-        isStarted = true;
-    } else {
-        startButton.style.display = 'none'; // Hide the button
-        displayAndSpeakQuestion(); // Start asking questions
-    }
-});
-
 // Function to start the timer
-function startTimer() {
+/* function startTimer() {
     let timeLeft = 5; // Example: 5 seconds per question
     timerElement.innerText = `${timeLeft} : Timer`;
 
@@ -133,7 +121,7 @@ window.addEventListener('load', () => {
     chatBox.innerHTML = ''; 
     startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start'; 
     setFilipinoVoice(); // Load voices on page load
-});
+}); */
 
 //FOR IDENTIFICATION LESSON 1
 document.getElementById('identify1-quiz').addEventListener('click', function (event) {
