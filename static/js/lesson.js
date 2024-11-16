@@ -1,4 +1,5 @@
 //lesson.js
+
 document.addEventListener("DOMContentLoaded", function() {
     const chatContainer = document.querySelector(".chat-container .chat-box");
     const filipinoSubjectLink = document.getElementById("filipino-subject");
@@ -93,13 +94,14 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+
     // Filipino Subject click event with confirmation handling
     filipinoSubjectLink.addEventListener("click", function(event) {
         event.preventDefault();
         confirmNavigation(() => {
             chatContainer.innerHTML = `
                 <h2>FILIPINO SUBJECT</h2>
-                <ul>
+                <ul class="filipino-link">
                     <li><a href="#" id="lesson-1-link">Aralin 1</a></li>
                     <li><a href="#">Aralin 2</a></li>
                     <li><a href="#">Aralin 3</a></li>
@@ -121,4 +123,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     window.speechSynthesis.onvoiceschanged = setFilipinoVoice;
     stopSpeech();
+
+    window.addEventListener("beforeunload", function() {
+        stopSpeech();
+    });
 });

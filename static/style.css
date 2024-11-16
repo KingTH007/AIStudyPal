@@ -173,6 +173,12 @@ li, a, button {
     gap: 15px;
 }
 
+.filipino-link {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    list-style-type: none;
+}
 /* Pop Up Instruction */
 /* Popup Quiz Styling */
 .popup-quiz {

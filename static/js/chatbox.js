@@ -63,66 +63,6 @@ function displayAndSpeakQuestion() {
     });
 }
 
-// Function to start the timer
-/* function startTimer() {
-    let timeLeft = 5; // Example: 5 seconds per question
-    timerElement.innerText = `${timeLeft} : Timer`;
-
-    timerInterval = setInterval(() => {
-        timeLeft--;
-        timerElement.innerText = `${timeLeft} : Timer`;
-
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            timerElement.innerText = 'Time is up!';
-            handleUserResponse(''); // Trigger empty response if time runs out
-        }
-    }, 1000);
-}
-
-// Function to stop the timer
-function stopTimer() {
-    clearInterval(timerInterval); // Stop the timer
-}
-
-// Display instructions
-function displayInstructions() {
-    alert("Pindutin ang Start button upang simulan ang pagsasanay. Pagkatapos, magsasalita ang AI at maaari mong sagutin gamit ang iyong boses.");
-    chatBox.innerHTML = ''; // Clear chatbox
-    addMessageToChatBox(aiText.parentNode, "Handa ka na bang magsimula? Pindutin ang 'SIMULAN'.", 'system');
-    speakAIText("Handa ka na bang magsimula? Pindutin ang 'SIMULAN'."); 
-}
-
-// Add message to chatbox
-function addMessageToChatBox(messageElement, text, type) {
-    const messageClone = messageElement.cloneNode(true);
-    const paragraph = messageClone.querySelector('p');
-    if (paragraph) {
-        paragraph.innerText = text;
-    }
-    messageClone.classList.add(type === 'system' ? 'ai-message' : 'user-message');
-    chatBox.appendChild(messageClone);
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-// End the game
-function endGame() {
-    stopTimer();
-    aiFeedback.innerText = "Tapos na ang mga tanong.";
-    addMessageToChatBox(aiFeedback.parentNode, aiFeedback.innerText, 'system');
-    speakAIText(aiFeedback.innerText, function () {
-        startButton.style.display = 'block';
-        startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start Again';
-    });
-}
-
-// Reset chatbox on load
-window.addEventListener('load', () => {
-    chatBox.innerHTML = ''; 
-    startButton.innerHTML = '<img src="../static/image/mic-icon.png" alt="Mic" id="mic-icon"> Start'; 
-    setFilipinoVoice(); // Load voices on page load
-}); */
-
 //FOR IDENTIFICATION LESSON 1
 document.getElementById('identify1-quiz').addEventListener('click', function (event) {
     event.preventDefault(); // Prevent default link behavior
