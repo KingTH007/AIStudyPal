@@ -1,9 +1,9 @@
-//lesson.js
-
 document.addEventListener("DOMContentLoaded", function() {
-    const chatContainer = document.querySelector(".chat-container .chat-box");
+    const filipinoLessonsDiv = document.getElementById("filipino-lessons");
+    const lesson1TitleDiv = document.getElementById("lesson-1-title");
+    const lesson1ContentDiv = document.getElementById("lesson-1-content");
     const filipinoSubjectLink = document.getElementById("filipino-subject");
-    const lesson1Link = document.getElementById("filipino-lesson-1");
+    const lesson1Link = document.getElementById("lesson-1-link");
     let filipinoVoice = null;
     let speechInstance = null;
 
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function() {
         speech.lang = "tl-PH";
         if (filipinoVoice) speech.voice = filipinoVoice;
         speech.rate = 1;
-        
+
         stopSpeech(); // Ensure any previous instance is stopped
         speechInstance = speech;
         speechSynthesis.speak(speech);
@@ -47,30 +47,11 @@ document.addEventListener("DOMContentLoaded", function() {
         };
     }
 
-    function showLesson1Title() {
-        chatContainer.innerHTML = `
-            <h2>Aralin 1: Panitikan and Karunungang-bayan</h2>
-            <button id="start-lesson-btn">Start Lesson</button>
-        `;
-        document.getElementById("start-lesson-btn").addEventListener("click", showLesson1Content);
-    }
-
-    function showLesson1Content() {
-        chatContainer.innerHTML = `
-            <h2>Aralin 1: Panitikan (Kahulugan at Kahalagahan)</h2>
-            <p><strong>PANITIKAN</strong>: Ito ay nagmula sa salitang "pang-titik-an" na ang ibig sabihin ay literatura o mga akdang nasusulat...</p>
-            <h4>KAHULUGAN NG PANITIKAN</h4>
-            <p>Ang pilipinong salita ng “panitikan” ay nanggaling sa wikang latin na “littera”...</p>
-            <h4>KAHALAGAHAN NG PAG-AARAL NG PANITIKANG PILIPINO</h4>
-            <ul>
-                <li>Mabatid ang kaugalian, tradisyon at kultura</li>
-                <li>Maipagmalaki ang manunulat na Pilipino</li>
-                <li>Mabatid ang mga akdang Pilipino</li>
-                <li>Mabatid ang sariling kahusayan, kapintasan at kahinaan</li>
-            </ul>
-        `;
-
-        speakText(lesson1ContentText);
+    function showDiv(div) {
+        // Hide all divs in the chat box
+        [filipinoLessonsDiv, lesson1TitleDiv, lesson1ContentDiv].forEach(d => d.classList.add("hidden"));
+        // Show the requested div
+        div.classList.remove("hidden");
     }
 
     function enableQuizzes() {
@@ -80,6 +61,24 @@ document.addEventListener("DOMContentLoaded", function() {
             link.classList.add('enabled');
         });
     }
+
+    // Filipino Subject click event with confirmation handling
+    filipinoSubjectLink.addEventListener("click", function(event) {
+        event.preventDefault();
+        confirmNavigation(() => showDiv(filipinoLessonsDiv));
+    });
+
+    // Lesson 1 link click event
+    lesson1Link.addEventListener("click", function(event) {
+        event.preventDefault();
+        confirmNavigation(() => showDiv(lesson1TitleDiv));
+    });
+
+    // Start lesson button click event
+    document.getElementById("start-lesson-btn").addEventListener("click", function() {
+        showDiv(lesson1ContentDiv);
+        speakText(lesson1ContentText);
+    });
 
     // Add a confirmation prompt when switching subjects or lessons
     function confirmNavigation(callback) {
@@ -93,33 +92,6 @@ document.addEventListener("DOMContentLoaded", function() {
             callback();
         }
     }
-
-
-    // Filipino Subject click event with confirmation handling
-    filipinoSubjectLink.addEventListener("click", function(event) {
-        event.preventDefault();
-        confirmNavigation(() => {
-            chatContainer.innerHTML = `
-                <h2>FILIPINO SUBJECT</h2>
-                <ul class="filipino-link">
-                    <li><a href="#" id="lesson-1-link">Aralin 1</a></li>
-                    <li><a href="#">Aralin 2</a></li>
-                    <li><a href="#">Aralin 3</a></li>
-                    <li><a href="#">Aralin 4</a></li>
-                </ul>
-            `;
-            document.getElementById("lesson-1-link").addEventListener("click", function(e) {
-                e.preventDefault();
-                showLesson1Title();
-            });
-        });
-    });
-
-    // Lesson 1 click event with confirmation handling
-    lesson1Link.addEventListener("click", function(event) {
-        event.preventDefault();
-        confirmNavigation(showLesson1Title);
-    });
 
     window.speechSynthesis.onvoiceschanged = setFilipinoVoice;
     stopSpeech();

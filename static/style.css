@@ -35,9 +35,9 @@ li, a, button {
 .sidebar {
     width: 250px;
     background-color: #2d2d2d;
-    height: 100vh; /* Full viewport height */
+    height: 100vh;
     display: flex;
-    flex-direction: column; /* Stack elements vertically */
+    flex-direction: column;
     padding: 20px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     position: relative;
@@ -132,7 +132,7 @@ li, a, button {
 .su button,
 .si button {
     padding: 10px;
-    width: 100px; /* Set width to align buttons */
+    width: 100px;
     background-color: #61d813;
     border: none;
     border-radius: 20px;
@@ -158,8 +158,8 @@ li, a, button {
     flex-direction: column;
     height: 100vh;
     position: relative;
-    justify-content: center; /* Centers child elements vertically */
-    align-items: center;  /* Centers child elements horizontally */
+    justify-content: center; 
+    align-items: center; 
 }
 
 /* Chatbox with overflow */
@@ -179,7 +179,7 @@ li, a, button {
     margin-top: 15px;
     list-style-type: none;
 }
-/* Pop Up Instruction */
+
 /* Popup Quiz Styling */
 .popup-quiz {
     position: absolute;
@@ -193,8 +193,8 @@ li, a, button {
     width: 80%;
     max-width: 400px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    display: none; /* Initially hidden */
-    z-index: 1010; /* Above the overlay */
+    display: none;
+    z-index: 1010; 
     text-align: center;
 }
 
@@ -237,55 +237,80 @@ li, a, button {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    display: none; /* Initially hidden */
-    z-index: 1000; /* Behind the popup */
+    display: none;
+    z-index: 1000;
 }
 
-/* Timer and Input Button */
-.user-input {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 15px;
-    border-top: 1px solid #ddd;
+/* Lessons */
+.hidden {
+    display: none;
 }
 
-.user-input button {
-    padding: 10px 20px;
-    background-color: #5cb85c;
-    color: white;
+/* Button styles for links in Filipino Lessons */
+.filipino-link .button1 {
+    display: block;
+    padding: 10px 15px;
+    margin: 10px 0;
+    text-align: center;
+    background-color: #61d813;
     border: none;
-    cursor: pointer;
     border-radius: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: background-color 0.3s ease;
-}
-
-.user-input button:hover {
-    background-color: #4cae4c;
-}
-
-.user-input button img {
-    width: 20px;
-    height: 20px;
-}
-
-.timer,
-.score {
     color: white;
-    background-color: #333;
-    padding: 5px 10px;
-    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-decoration: none;
 }
 
-.timer {
-    margin-right: 20px;
+.filipino-link .button1:hover {
+    background-color: #5dbd1d;
+    transform: scale(1.05);
 }
 
-.score {
-    font-weight: bold;
+/* Button style for Start Lesson */
+#start-lesson-btn {
+    padding: 12px 20px;
+    background-color: #61d813;
+    border: none;
+    border-radius: 20px;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#start-lesson-btn:hover {
+    background-color: #5dbd1d;
+    transform: scale(1.05);
+}
+
+/* Text alignment for the content */
+.hidden h2 {
+    text-align: center;
+    color: white;
+    margin-bottom: 15px;
+}
+
+.hidden p,
+.hidden ul {
+    text-align: left;
+    color: white;
+    margin: 10px 20px;
+}
+
+.hidden ul {
+    list-style-type: square;
+    margin-left: 40px;
+}
+
+.hidden li {
+    margin-bottom: 5px;
+}
+
+/* Specific styling for lesson links */
+.filipino-link .button1 {
+    margin: 10px 0;
+    width: 100%;  
 }
 
 /* Style for disabled links with grey-out effect and lock icon */
@@ -297,17 +322,17 @@ li, a, button {
 }
 
 .disabled::before {
-    content: '\f023'; /* Unicode for lock icon if using Font Awesome */
+    content: '\f023';
     font-family: 'Font Awesome 5 Free';
     font-weight: 900;
     color: grey;
     position: absolute;
-    left: -20px; /* Adjust spacing as needed */
+    left: -20px;
 }
 
 /* Style for enabled links */
 .enabled {
-    color: black; /* or any color you prefer for active links */
+    color: black;
     cursor: pointer;
 }
 
@@ -317,7 +342,7 @@ li, a, button {
     .sidebar {
         position: fixed;
         top: 0;
-        left: -250px; /* Hidden by default */
+        left: -250px;
         width: 250px;
         height: 100%;
         background-color: #2d2d2d;
@@ -326,7 +351,7 @@ li, a, button {
     }
 
     .sidebar.show {
-        left: 0; /* Slide in */
+        left: 0;
     }
 
     .hamburger-icon {
@@ -340,7 +365,6 @@ li, a, button {
         z-index: 1002;
     }
 
-    /* Overlay for Mobile */
     .overlay {
         display: none;
         position: fixed;
@@ -356,35 +380,29 @@ li, a, button {
         display: block;
     }
 
-    /* Hide Sidebar Menu by Default on Mobile */
     .sidebar-menu,
     .buttons {
         display: block;
     }
 
-    /* Sidebar Menu Links */
     .sidebar-menu a {
         padding: 10px 15px;
     }
 
-    /* Adjust Indentation for Mobile */
     .drop-content {
         padding-left: 20px;
     }
 
-    /* Ensure Dropdowns Expand Properly */
     .drop-content.show {
         display: block;
     }
 
-    /* Adjust Logo Position on Mobile */
     .logo {
         text-align: center;
         margin-bottom: 20px;
     }
 
-    /* Adjust Buttons on Mobile */
     .buttons {
-        margin-top: auto; /* Push buttons to the bottom */
+        margin-top: auto;
     }
 }
