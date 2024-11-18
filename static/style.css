@@ -164,13 +164,12 @@ li, a, button {
 
 /* Chatbox with overflow */
 .chat-box {
-    width: 100%;
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh; /* Full viewport height for testing */
+    color: white;
 }
 
 .filipino-link {
@@ -241,11 +240,6 @@ li, a, button {
     z-index: 1000;
 }
 
-/* Lessons */
-.hidden {
-    display: none;
-}
-
 /* Button styles for links in Filipino Lessons */
 .filipino-link .button1 {
     display: block;
@@ -284,11 +278,59 @@ li, a, button {
     transform: scale(1.05);
 }
 
+/* Styling for the lesson titles and content */
+.lesson-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* Styling for buttons inside each lesson */
+.lesson-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Styling for individual buttons */
+.lesson-buttons button {
+    width: 200px;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for buttons on hover */
+.lesson-buttons button:hover {
+    background-color: #45a049;
+}
+
 /* Text alignment for the content */
 .hidden h2 {
     text-align: center;
     color: white;
     margin-bottom: 15px;
+}
+
+/* Lessons */
+.hidden {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+}
+
+/* Show elements with flexbox centering */
+.hidden.show {
+    display: flex;
+    flex-direction: column;
 }
 
 .hidden p,
