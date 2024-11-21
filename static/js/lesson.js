@@ -1,6 +1,4 @@
-
-
-
+//Lesson.js
 document.addEventListener("DOMContentLoaded", function() {
     const filipinoLessonsDiv = document.getElementById("filipino-lessons");
     const lesson1TitleDiv = document.getElementById("lesson-1-title");
